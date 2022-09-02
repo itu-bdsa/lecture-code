@@ -9,10 +9,12 @@ public class ProgramTests
         using var writer = new StringWriter();
         Console.SetOut(writer);
 
-        // Act
-        Program.Main(null);
+         // Act
+        var program = Assembly.Load(nameof(HelloWorld));
+        program.EntryPoint?.Invoke(null, new[] { Array.Empty<string>() });
 
         // Assert
-
+        var output = writer.GetStringBuilder().ToString().TrimEnd();
+        output.Should().Be("Hello, World!");
     }
 }
