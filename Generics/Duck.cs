@@ -1,13 +1,15 @@
+namespace Generics;
+
 public class Duck : IEquatable<Duck>
 {
     public int Id { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public int Age { get; set; }
 
     /// <summary>
-    /// Two ducks are considered equal if their Id's match
+    /// Two ducks are considered equal if their Names match
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -19,7 +21,7 @@ public class Duck : IEquatable<Duck>
         }
         else
         {
-            return Id == other.Id;
+            return Name == other.Name;
         }
     }
 
@@ -50,23 +52,20 @@ public class Duck : IEquatable<Duck>
     /// <returns></returns>
     public override int GetHashCode()
     {
-        return Id;
+        return Name.GetHashCode();
     }
 
-    public override string ToString()
-    {
-        return $"{Name}, {Age}";
-    }
+    public override string ToString() => $"{Name}, {Age}";
 
     public static ICollection<Duck> Ducks = new[] {
-            new Duck { Id = 1, Name = "Donald Duck", Age = 32 },
-            new Duck { Id = 2, Name = "Daisy Duck", Age = 30 },
-            new Duck { Id = 3, Name = "Huey Duck", Age = 10 },
-            new Duck { Id = 4, Name = "Dewey Duck", Age = 10 },
-            new Duck { Id = 5, Name = "Louie  Duck", Age = 10 },
-            new Duck { Id = 6, Name = "Scrooge McDuck", Age = 60 },
-            new Duck { Id = 7, Name = "Flintheart Glomgold", Age = 66 },
-            new Duck { Id = 8, Name = "Magica De Spell", Age = 302 },
-            new Duck { Id = 9, Name = "John D. Rockerduck", Age = 55 }
-        };
+        new Duck { Id = 1, Name = "Donald Duck", Age = 32 },
+        new Duck { Id = 2, Name = "Daisy Duck", Age = 30 },
+        new Duck { Id = 3, Name = "Huey Duck", Age = 10 },
+        new Duck { Id = 4, Name = "Dewey Duck", Age = 10 },
+        new Duck { Id = 5, Name = "Louie  Duck", Age = 10 },
+        new Duck { Id = 6, Name = "Scrooge McDuck", Age = 60 },
+        new Duck { Id = 7, Name = "Flintheart Glomgold", Age = 66 },
+        new Duck { Id = 8, Name = "Magica De Spell", Age = 302 },
+        new Duck { Id = 9, Name = "John D. Rockerduck", Age = 55 }
+    };
 }

@@ -2,9 +2,20 @@ namespace Generics;
 
 public class CollectionUtilities
 {
-    public static List<int> GetEven(List<int> list)
+    public static IEnumerable<int> GetEven(IEnumerable<int> list, int stopMax = int.MaxValue)
     {
-        return new List<int>();
+        foreach (var v in list)
+        {
+            if (v >= stopMax)
+            {
+                yield break;
+            }
+
+            if (v % 2 == 0)
+            {
+                yield return v;
+            }
+        }
     }
 
     public static bool Find(int[] list, int number)
@@ -12,19 +23,15 @@ public class CollectionUtilities
         throw new NotImplementedException();
     }
 
-    public static IList<int> Unique(IList<int> numbers)
-    {
-        throw new NotImplementedException();
-    }
+    public static IEnumerable<int> Unique(IEnumerable<int> numbers)
+        => new HashSet<int>(numbers);
 
-    public static IList<int> Reverse(IList<int> numbers)
-    {
-        throw new NotImplementedException();
-    }
+    public static IEnumerable<int> Reverse(IEnumerable<int> numbers)
+        => new Stack<int>(numbers);
 
-    public static void Sort(List<Duck> ducks, IComparer<Duck>? comparer = null)
+    public static void Sort<T>(List<T> items, IComparer<T>? comparer = null)
     {
-        throw new NotImplementedException();
+        items.Sort(comparer);
     }
 
     public static IDictionary<int, Duck> ToDictionary(IEnumerable<Duck> ducks)

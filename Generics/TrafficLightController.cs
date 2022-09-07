@@ -1,21 +1,14 @@
 namespace Generics;
 
+using static TrafficLightColor;
+
 public class TrafficLightController : ITrafficLightController
 {
-    public bool MayIGo(string color)
+    public bool MayIGo(TrafficLightColor color) => color switch
     {
-        color = color.ToLowerInvariant();
-
-        if (color == "green")
-        {
-            return true;
-        }
-
-        if (color == "yellow" || color == "red")
-        {
-            return false;
-        }
-
-        throw new ArgumentException("Invalid color", nameof(color));
-    }
+        Red => false,
+        Yellow => false,
+        Green => true,
+        _ => throw new ArgumentException("Invalid color", nameof(color))
+    };
 }
