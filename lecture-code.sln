@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generics", "Generics\Generi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generics.Tests", "Generics.Tests\Generics.Tests.csproj", "{8DACB219-AB30-443F-BB69-13A3D79F1605}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq", "Linq\Linq.csproj", "{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq.Models", "Linq.Models\Linq.Models.csproj", "{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{8DACB219-AB30-443F-BB69-13A3D79F1605}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DACB219-AB30-443F-BB69-13A3D79F1605}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DACB219-AB30-443F-BB69-13A3D79F1605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
