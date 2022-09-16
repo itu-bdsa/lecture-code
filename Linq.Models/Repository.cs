@@ -21,12 +21,12 @@ public class Repository
 
         Superheroes = new HashSet<Superhero>
         {
-            new Superhero(1, "Clark", "Kent", "Superman", "Reporter", Male, 1938, "Metropolis"),
-            new Superhero(2, "Bruce", "Wayne", "Batman", "CEO of Wayne Enterprises", Male, 1939, "Gotham City"),
-            new Superhero(3, "Diana", "Prince", "Wonder Woman", "Amazon Princess", Female, 1941, "Themyscira"),
-            new Superhero(4, "Hal", "Jordan", "Green Lantern", "Test pilot", Male, 1940, "New York City"),
-            new Superhero(5, "Barry", "Allen", "The Flash", "Forensic scientist", Male, 1940, "Central City"),
-            new Superhero(6, "Selina", "Kyle", "Catwoman", "Thief", Female, 1940, "Gotham City")
+            new Superhero(1, "Clark", "Kent", "Superman", "Reporter", Male, 1938, 1),
+            new Superhero(2, "Bruce", "Wayne", "Batman", "CEO of Wayne Enterprises", Male, 1939, 2),
+            new Superhero(3, "Diana", "Prince", "Wonder Woman", "Amazon Princess", Female, 1941, 3),
+            new Superhero(4, "Hal", "Jordan", "Green Lantern", "Test pilot", Male, 1940, 4),
+            new Superhero(5, "Barry", "Allen", "The Flash", "Forensic scientist", Male, 1940, 5),
+            new Superhero(6, "Selina", "Kyle", "Catwoman", "Thief", Female, 1940, 2)
         };
     }
 }

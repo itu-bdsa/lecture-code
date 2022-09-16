@@ -2,26 +2,13 @@ namespace Linq;
 
 public class LocalFunctions
 {
-    int LocalFunctionFactorial(int n)
-    {
-        int Factorial(int number)
-        {
-            if (number < 2)
-            {
-                return 1;
-            }
-            else
-            {
-                return number * Factorial(number - 1);
-            }
-        }
+    public int Factorial(int number) => number < 2
+        ? 1
+        : number * Factorial(number - 1);
 
-        return Factorial(n);
-    }
-
-    int LambdaFactorial(int n)
+    public int LambdaFactorial(int n)
     {
-        Func<int, int> nthFactorial = default(Func<int, int>);
+        Func<int, int> nthFactorial = default!;
 
         nthFactorial = number => number < 2
             ? 1

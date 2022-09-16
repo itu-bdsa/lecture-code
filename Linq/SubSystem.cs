@@ -11,7 +11,6 @@ public class SubSystem
     public SubSystem(Logger logger)
     {
         _logger = logger;
-
     }
 
     public void Operation(string input)
