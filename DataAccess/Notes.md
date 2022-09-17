@@ -1,43 +1,70 @@
 # Notes
 
-## Install the Entity Framework global tool
-
-```powershell
-dotnet tool install --global dotnet-ef
-```
-
 ## Run SQL Server container
 
-```PowerShell
-$password = New-Guid
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
-$database = "Futurama"
-$connectionString = "Server=localhost;Database=$database;User Id=sa;Password=$password;Trusted_Connection=False;Encrypt=True"
+```bash
+MSSQL_SA_PASSWORD='<YourStrong@Passw0rd>'
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$MSSQL_SA_PASSWORD" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+CONNECTION_STRING="Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False"
 ```
 
 ## Enable User Secrets
 
-```powershell
+```bash
 dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:Futurama" "$connectionString"
+dotnet user-secrets set "ConnectionStrings:Futurama" "$CONNECTION_STRING"
 dotnet add package Microsoft.Extensions.Configuration.UserSecrets
 ```
 
-## Settings
+## Get Connection String
 
 ```csharp
-var configuration = LoadConfiguration();
+var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 var connectionString = configuration.GetConnectionString("Futurama");
+```
 
-static IConfiguration LoadConfiguration()
+## Old School SQL
+
+```csharp
+var cmdText = @"SELECT c.Name, c.Species, a.Name as Actor
+                FROM Characters AS c
+                JOIN Actors AS a ON c.ActorId = a.Id
+                ORDER BY c.Name";
+
+using var connection = new SqlConnection(connectionString);
+using var command = new SqlCommand(cmdText, connection);
+
+connection.Open();
+
+using var reader = command.ExecuteReader();
+
+while (reader.Read())
 {
-    var builder = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .AddUserSecrets<Program>();
+    var character = new {
+        Name = reader.GetString("Name"),
+        Species = reader.GetString("Species"),
+        Actor = reader.GetString("Actor")
+    };
 
-    return builder.Build();
+    Console.WriteLine(character);
 }
+```
+
+## Install the Entity Framework global tool
+
+```bash
+dotnet tool install --global dotnet-ef
+dotnet ef migrations add Start --startup-project DataAccess --project DataAccess.Infrastructure
+dotnet ef database update --startup-project DataAccess --project DataAccess.Infrastructure
+```
+
+## Reverse Engineer Database
+
+```bash
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+
+dotnet ef dbcontext scaffold "..." Microsoft.EntityFrameworkCore.SqlServer --data-annotations
 ```
 
 ## Install the SQL client package
@@ -65,53 +92,6 @@ while (reader.Read())
     };
     Console.WriteLine(character);
 }
-```
-
-## SQL Injection
-
-```csharp
-static void Main(string[] args)
-{
-    Console.Write("Enter search string: ");
-    var searchString = Console.ReadLine();
-
-    var cmdText = "SELECT Name FROM Characters WHERE Name LIKE '%' + @SearchString + '%'";
-
-    using (var connection = new SqlConnection(connectionString));
-    using (var command = new SqlCommand(cmdText, connection));
-
-    command.Parameters.AddWithValue("@SearchString", searchString);
-
-    connection.Open();
-
-    var reader = command.ExecuteReader();
-
-    while (reader.Read())
-    {
-        Console.WriteLine(reader["Name"]);
-    }
-}
-```
-
-## Reverse Engineer Database
-
-```powershell
-dotnet add package Microsoft.EntityFrameworkCore.Design
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-
-dotnet ef dbcontext scaffold "..." Microsoft.EntityFrameworkCore.SqlServer --data-annotations
-```
-
-## Add package to project
-
-```powershell
-$connectionString = "Server=.;Database=Futurama;User Id=sa;Password=$password;Trusted_Connection=False;Encrypt=True"
-```
-
-## Startup project
-
-```bash
-dotnet add package Microsoft.EntityFrameworkCore.Design
 ```
 
 ## Entities project

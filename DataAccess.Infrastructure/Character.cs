@@ -21,6 +21,4 @@ public class Character
     {
         Name = name;
     }
-
-    public override string ToString() => $"Character {{ Id = {Id}, ActorId = {ActorId}, Actor = {Actor?.Name}, Name = {Name}, Species = {Species}, Planet = {Planet} }}";
 }

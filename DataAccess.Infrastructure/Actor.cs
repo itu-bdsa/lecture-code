@@ -13,6 +13,4 @@ public class Actor
     {
         Name = name;
     }
-
-    public override string ToString() => $"Actor {{ Id = {Id}, Name = {Name} }}";
 }
