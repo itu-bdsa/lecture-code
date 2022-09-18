@@ -27,6 +27,12 @@ var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build()
 var connectionString = configuration.GetConnectionString("Futurama");
 ```
 
+## Install the SQL client package
+
+```bash
+dotnet add package Microsoft.Data.SqlClient
+```
+
 ## Raw SQL
 
 ```csharp
@@ -58,8 +64,6 @@ while (reader.Read())
 
 ```bash
 dotnet tool install --global dotnet-ef
-dotnet ef migrations add Start --startup-project DataAccess --project DataAccess.Infrastructure
-dotnet ef database update --startup-project DataAccess --project DataAccess.Infrastructure
 ```
 
 ## Reverse Engineer Database
@@ -73,28 +77,16 @@ dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet ef dbcontext scaffold "$CONNECTION_STRING" Microsoft.EntityFrameworkCore.SqlServer --data-annotations
 ```
 
-## Install the SQL client package
-
-```bash
-dotnet add package Microsoft.Data.SqlClient
-```
-
-## Entities project
-
-```bash
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-```
-
 ## Add migration
 
 ```bash
-dotnet ef migrations add InitialMigration
+dotnet ef migrations add InitialMigration --startup-project MyApp --project MyApp.Infrastructure
 ```
 
 ## Update database
 
 ```bash
-dotnet ef database update
+dotnet ef database update --startup-project MyApp --project MyApp.Infrastructure
 ```
 
 ## ComicsContext
@@ -118,7 +110,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace DataAccess;
+namespace MyApp;
 
 internal class ComicsContextFactory : IDesignTimeDbContextFactory<ComicsContext>
 {
