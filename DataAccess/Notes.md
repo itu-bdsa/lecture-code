@@ -4,13 +4,17 @@
 
 ```bash
 MSSQL_SA_PASSWORD='<YourStrong@Passw0rd>'
+
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$MSSQL_SA_PASSWORD" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+
 CONNECTION_STRING="Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False"
 ```
 
 ## Enable User Secrets
 
 ```bash
+CONNECTION_STRING="Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False"
+
 dotnet user-secrets init
 dotnet user-secrets set "ConnectionStrings:Futurama" "$CONNECTION_STRING"
 dotnet add package Microsoft.Extensions.Configuration.UserSecrets
@@ -23,7 +27,7 @@ var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build()
 var connectionString = configuration.GetConnectionString("Futurama");
 ```
 
-## Old School SQL
+## Raw SQL
 
 ```csharp
 var cmdText = @"SELECT c.Name, c.Species, a.Name as Actor
@@ -61,37 +65,18 @@ dotnet ef database update --startup-project DataAccess --project DataAccess.Infr
 ## Reverse Engineer Database
 
 ```bash
+CONNECTION_STRING="Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False"
+
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
-dotnet ef dbcontext scaffold "..." Microsoft.EntityFrameworkCore.SqlServer --data-annotations
+dotnet ef dbcontext scaffold "$CONNECTION_STRING" Microsoft.EntityFrameworkCore.SqlServer --data-annotations
 ```
 
 ## Install the SQL client package
 
 ```bash
 dotnet add package Microsoft.Data.SqlClient
-```
-
-## Raw SQL
-
-```csharp
-using var connection = new SqlConnection(connectionString);
-var cmdText = "SELECT * FROM Characters";
-using var command = new SqlCommand(cmdText, connection);
-connection.Open();
-using var reader = command.ExecuteReader();
-while (reader.Read())
-{
-    var character = new
-    {
-        Id = reader.GetInt32("Id"),
-        Name = reader.GetString("Name"),
-        Species = reader.GetString("Species"),
-        Planet = reader.GetString("Planet"),
-    };
-    Console.WriteLine(character);
-}
 ```
 
 ## Entities project
@@ -126,23 +111,24 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 }
 ```
 
-## DesignTimeDbContextFactory
+## `IDesignTimeDbContextFactory<T>`
 
 ```csharp
-public class ComicsContextFactory : IDesignTimeDbContextFactory<ComicsContext>
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+
+namespace DataAccess;
+
+internal class ComicsContextFactory : IDesignTimeDbContextFactory<ComicsContext>
 {
     public ComicsContext CreateDbContext(string[] args)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddUserSecrets<Program>()
-            .AddJsonFile("appsettings.json")
-            .Build();
+        var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+        var connectionString = configuration.GetConnectionString("Comics");
 
-        var connectionString = configuration.GetConnectionString("Superheroes");
-
-        var optionsBuilder = new DbContextOptionsBuilder<ComicsContext>()
-            .UseSqlServer(connectionString);
+        var optionsBuilder = new DbContextOptionsBuilder<ComicsContext>();
+        optionsBuilder.UseSqlServer(connectionString);
 
         return new ComicsContext(optionsBuilder.Options);
     }
