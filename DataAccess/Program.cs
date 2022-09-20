@@ -13,7 +13,13 @@ var options = optionsBuilder.Options;
 
 Console.Write("Enter query to search for character: ");
 
-var name = Console.ReadLine();
+string? name;
+do
+{
+    Console.Write("Enter query to search for character: ");
+    name = Console.ReadLine();
+}
+while (string.IsNullOrWhiteSpace(name));
 
 using var context = new FuturamaContext(options);
 
@@ -22,10 +28,10 @@ var characters = from c in context.Characters
                  orderby c.Name
                  select new
                  {
-                    c.Name,
-                    c.Species,
-                    c.Planet,
-                    Actor = c.Actor.Name
+                     c.Name,
+                     c.Species,
+                     c.Planet,
+                     Actor = c.Actor == null ? string.Empty : c.Actor.Name
                  };
 
 foreach (var character in characters)
