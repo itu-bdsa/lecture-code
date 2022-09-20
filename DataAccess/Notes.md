@@ -69,12 +69,10 @@ dotnet tool install --global dotnet-ef
 ## Reverse Engineer Database
 
 ```bash
-CONNECTION_STRING="Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False"
-
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
-dotnet ef dbcontext scaffold "$CONNECTION_STRING" Microsoft.EntityFrameworkCore.SqlServer --data-annotations
+dotnet ef dbcontext scaffold "Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer --data-annotations
 ```
 
 ## Add migration
