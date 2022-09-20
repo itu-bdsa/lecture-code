@@ -1,2 +1,3 @@
 # lecture-code
-Code for C# part
+
+Code for C♯ part
