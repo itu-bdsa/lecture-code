@@ -8,13 +8,19 @@ public class ComicsContext : DbContext
     }
 
     public DbSet<City> Cities => Set<City>();
+    public DbSet<Power> Powers => Set<Power>();
     public DbSet<Character> Characters => Set<Character>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<City>()
-                    .Property(c => c.Name)
+                    .HasIndex(c => c.Name).IsUnique();
+
+        modelBuilder.Entity<City>().Property(c => c.Name)
                     .HasMaxLength(50);
+
+        modelBuilder.Entity<Power>()
+                    .HasIndex(c => c.Name).IsUnique();
 
         modelBuilder.Entity<Power>()
                     .Property(c => c.Name)

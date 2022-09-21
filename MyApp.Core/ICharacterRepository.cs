@@ -5,6 +5,6 @@ public interface ICharacterRepository
     CharacterDetailsDto Create(CharacterCreateDto character);
     CharacterDetailsDto? Find(int characterId);
     IReadOnlyCollection<CharacterDto> Read();
-    bool UpdateAsync(CharacterUpdateDto character);
-    bool DeleteAsync(int characterId);
+    Status Update(CharacterUpdateDto character);
+    Status Delete(int characterId);
 }

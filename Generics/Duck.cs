@@ -15,7 +15,7 @@ public class Duck : IEquatable<Duck>
     /// <returns></returns>
     public bool Equals(Duck? other)
     {
-        if (other == null)
+        if (other is null)
         {
             return false;
         }

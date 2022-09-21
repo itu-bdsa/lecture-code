@@ -2,9 +2,9 @@ namespace MyApp.Core;
 
 public interface IPowerRepository
 {
-    PowerDto Create(PowerCreateDto character);
+    (Status, PowerDto) Create(PowerCreateDto power);
     PowerDto? Find(int powerId);
     IReadOnlyCollection<PowerDto> Read();
-    bool UpdateAsync(PowerDto character);
-    bool DeleteAsync(int powerId);
+    Status Update(PowerDto power);
+    Status Delete(int powerId);
 }
