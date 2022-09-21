@@ -1,12 +1,12 @@
 ﻿namespace MyApp.Core
 {
-    public class CharacterValidation
+    public static class CharacterValidation
     {
-        public static ValidationResult? ValidateName(string alterEgo, ValidationContext validationContext)
+        public static ValidationResult? ValidateName(string? alterEgo, ValidationContext validationContext)
         {
             var character = (CharacterCreateDto)validationContext.ObjectInstance;
 
-            var names = new[]
+            string?[] names =
             {
                 alterEgo,
                 character.GivenName,
@@ -23,9 +23,9 @@
 
         public static ValidationResult? ValidatePowers(ISet<string> powers)
         {
-            if (powers.Any(p => p.Length > 50))
+            if (powers.Any(p => string.IsNullOrWhiteSpace(p) || p.Length > 50))
             {
-                return new ValidationResult("A power must be at most 50 characters.");
+                return new ValidationResult("A power must be between 1 and 50 characters.");
             }
 
             return ValidationResult.Success;
