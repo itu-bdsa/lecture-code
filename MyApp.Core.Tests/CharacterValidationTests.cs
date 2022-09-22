@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyApp.Core.Tests;
 
-public class CharacterValidationTests
+public sealed class CharacterValidationTests
 {
-    private CharacterCreateDto _batman = new CharacterCreateDto("Batman", "Bruce", "Wayne", 1939, "CEO of Wayne Enterprises", "Gotham City", Male, null, new HashSet<string> { "brilliant deductive skill" });
+    private CharacterCreateDto _batman = new CharacterCreateDto("Batman", "Bruce", "Wayne", 1939, "CEO of Wayne Enterprises", "Gotham City", Male, "https://upload.wikimedia.org/wikipedia/en/c/c7/Batman_Infobox.jpg", new HashSet<string> { "brilliant deductive skill" });
 
     [Theory]
     [InlineData("Batman", "Bruce", "Wayne")]

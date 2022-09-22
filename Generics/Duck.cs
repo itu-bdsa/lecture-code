@@ -1,6 +1,6 @@
 namespace Generics;
 
-public class Duck : IEquatable<Duck>
+public sealed class Duck : IEquatable<Duck>
 {
     public int Id { get; set; }
 

@@ -1,6 +1,6 @@
 namespace Generics.Tests;
 
-public class PostalCodeValidatorTests
+public sealed class PostalCodeValidatorTests
 {
     [Theory]
     [InlineData("2000", true)]

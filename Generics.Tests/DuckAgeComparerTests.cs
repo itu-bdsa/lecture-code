@@ -1,8 +1,6 @@
-using Xunit;
-
 namespace Generics.Tests;
 
-public class DuckAgeComparerTests
+public sealed class DuckAgeComparerTests
 {
     // Compare should return:
     // a signed integer that indicates the relative values of x and y:

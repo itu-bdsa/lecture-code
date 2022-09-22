@@ -1,6 +1,6 @@
 namespace MyApp.Infrastructure;
 
-public class PowerRepository : IPowerRepository
+public sealed class PowerRepository : IPowerRepository
 {
     private readonly ComicsContext _context;
 

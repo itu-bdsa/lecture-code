@@ -1,6 +1,6 @@
 namespace Linq.Models;
 
-public class City
+public sealed class City
 {
     public int Id { get; init; }
 

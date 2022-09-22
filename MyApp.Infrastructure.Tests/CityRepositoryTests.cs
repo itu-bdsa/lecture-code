@@ -4,7 +4,7 @@ using MyApp.Core;
 
 namespace MyApp.Infrastructure.Tests;
 
-public class CityRepositoryTests : IDisposable
+public sealed class CityRepositoryTests : IDisposable
 {
     private readonly ComicsContext _context;
     private readonly CityRepository _repository;

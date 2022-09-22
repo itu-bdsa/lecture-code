@@ -4,7 +4,7 @@ using MyApp.Core;
 
 namespace MyApp.Infrastructure.Tests;
 
-public class PowerRepositoryTests : IDisposable
+public sealed class PowerRepositoryTests : IDisposable
 {
     private readonly ComicsContext _context;
     private readonly PowerRepository _repository;

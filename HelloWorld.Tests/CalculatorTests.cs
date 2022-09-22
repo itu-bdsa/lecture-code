@@ -1,6 +1,6 @@
 namespace HelloWorld.Tests;
 
-public class CalculatorTests
+public sealed class CalculatorTests
 {
     [Fact]
     public void Add_given_1_2_3_returns_6()

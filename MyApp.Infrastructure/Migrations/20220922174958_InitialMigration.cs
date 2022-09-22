@@ -22,7 +22,7 @@ namespace MyApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Power",
+                name: "Powers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -31,7 +31,7 @@ namespace MyApp.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Power", x => x.Id);
+                    table.PrimaryKey("PK_Powers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,13 +40,14 @@ namespace MyApp.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AlterEgo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     GivenName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Surname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AlterEgo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    FirstAppearance = table.Column<short>(type: "smallint", nullable: true),
                     Occupation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    FirstAppearance = table.Column<int>(type: "int", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true)
+                    ImageUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,9 +76,9 @@ namespace MyApp.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CharacterPower_Power_PowersId",
+                        name: "FK_CharacterPower_Powers_PowersId",
                         column: x => x.PowersId,
-                        principalTable: "Power",
+                        principalTable: "Powers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -91,6 +92,18 @@ namespace MyApp.Infrastructure.Migrations
                 name: "IX_Characters_CityId",
                 table: "Characters",
                 column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cities_Name",
+                table: "Cities",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Powers_Name",
+                table: "Powers",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -102,7 +115,7 @@ namespace MyApp.Infrastructure.Migrations
                 name: "Characters");
 
             migrationBuilder.DropTable(
-                name: "Power");
+                name: "Powers");
 
             migrationBuilder.DropTable(
                 name: "Cities");

@@ -12,7 +12,7 @@ using MyApp.Infrastructure;
 namespace MyApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ComicsContext))]
-    [Migration("20220920150712_InitialMigration")]
+    [Migration("20220922174958_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,8 +54,8 @@ namespace MyApp.Infrastructure.Migrations
                     b.Property<int?>("CityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FirstAppearance")
-                        .HasColumnType("int");
+                    b.Property<short?>("FirstAppearance")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -64,6 +64,10 @@ namespace MyApp.Infrastructure.Migrations
                     b.Property<string>("GivenName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Occupation")
                         .HasMaxLength(50)
@@ -95,6 +99,9 @@ namespace MyApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Cities");
                 });
 
@@ -113,7 +120,10 @@ namespace MyApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Power");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Powers");
                 });
 
             modelBuilder.Entity("CharacterPower", b =>

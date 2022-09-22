@@ -1,6 +1,6 @@
 namespace MyApp.Infrastructure;
 
-public class CityRepository : ICityRepository
+public sealed class CityRepository : ICityRepository
 {
     private readonly ComicsContext _context;
 

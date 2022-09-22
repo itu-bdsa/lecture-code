@@ -1,6 +1,6 @@
 namespace MyApp.Infrastructure;
 
-public class ComicsContext : DbContext
+public sealed class ComicsContext : DbContext
 {
     public ComicsContext(DbContextOptions<ComicsContext> options)
         : base(options)
@@ -27,15 +27,15 @@ public class ComicsContext : DbContext
                     .HasMaxLength(50);
 
         modelBuilder.Entity<Character>()
+                    .Property(c => c.AlterEgo)
+                    .HasMaxLength(50);
+
+        modelBuilder.Entity<Character>()
                     .Property(c => c.GivenName)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<Character>()
                     .Property(c => c.Surname)
-                    .HasMaxLength(50);
-
-        modelBuilder.Entity<Character>()
-                    .Property(c => c.AlterEgo)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<Character>()
@@ -45,5 +45,10 @@ public class ComicsContext : DbContext
         modelBuilder.Entity<Character>()
                     .Property(e => e.Gender)
                     .HasConversion(new EnumToStringConverter<Gender>(new ConverterMappingHints(size: 50)));
+
+        modelBuilder.Entity<Character>()
+                    .Property(c => c.ImageUrl)
+                    .HasMaxLength(250);
+
     }
 }
