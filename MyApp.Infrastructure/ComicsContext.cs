@@ -2,14 +2,14 @@ namespace MyApp.Infrastructure;
 
 public sealed class ComicsContext : DbContext
 {
+    public DbSet<City> Cities => Set<City>();
+    public DbSet<Power> Powers => Set<Power>();
+    public DbSet<Character> Characters => Set<Character>();
+
     public ComicsContext(DbContextOptions<ComicsContext> options)
         : base(options)
     {
     }
-
-    public DbSet<City> Cities => Set<City>();
-    public DbSet<Power> Powers => Set<Power>();
-    public DbSet<Character> Characters => Set<Character>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
