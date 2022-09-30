@@ -1,6 +1,6 @@
 namespace Generics;
 
-public class DuckAgeComparer : IComparer<Duck>
+public sealed class DuckAgeComparer : IComparer<Duck>
 {
     public int Compare(Duck? x, Duck? y)
     {

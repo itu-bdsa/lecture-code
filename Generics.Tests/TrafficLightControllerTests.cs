@@ -1,6 +1,6 @@
 namespace Generics.Tests;
 
-public class TrafficLightControllerTests
+public sealed class TrafficLightControllerTests
 {
     [Theory]
     [InlineData(TrafficLightColor.Red, false)]

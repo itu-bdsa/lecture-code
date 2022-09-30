@@ -1,6 +1,6 @@
 namespace HelloWorld.Tests;
 
-public class ProgramTests
+public sealed class ProgramTests
 {
     [Fact]
     public void Main_when_run_prints_Hello_World()

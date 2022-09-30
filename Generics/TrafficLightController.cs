@@ -2,7 +2,7 @@ namespace Generics;
 
 using static TrafficLightColor;
 
-public class TrafficLightController : ITrafficLightController
+public sealed class TrafficLightController : ITrafficLightController
 {
     public bool MayIGo(TrafficLightColor color) => color switch
     {

@@ -4,22 +4,22 @@ public class Person
 {
 }
 
-public class Student : Person
+public sealed class Student : Person
 {
     public int Semester { get; set; }
 }
 
-public class PeopleComparer : IComparer<Person>
+public sealed class PeopleComparer : IComparer<Person>
 {
     public int Compare(Person? x, Person? y) => throw new NotImplementedException();
 }
 
-public class StudentComparer : IComparer<Student>
+public sealed class StudentComparer : IComparer<Student>
 {
     public int Compare(Student? x, Student? y) => x?.Semester - y?.Semester ?? 0;
 }
 
-public class Variance
+public sealed class Variance
 {
     public void ArrayTypeCovariance()
     {
