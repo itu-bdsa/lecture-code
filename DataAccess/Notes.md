@@ -3,9 +3,7 @@
 ## Run SQL Server container
 
 ```bash
-MSSQL_SA_PASSWORD='<YourStrong@Passw0rd>'
-
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$MSSQL_SA_PASSWORD" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YourStrong@Passw0rd>" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
 
 CONNECTION_STRING="Server=localhost;Database=Futurama;User Id=sa;Password=<YourStrong@Passw0rd>;Trusted_Connection=False;Encrypt=False"
 ```
@@ -97,7 +95,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
     modelBuilder
         .Entity<Character>()
         .Property(e => e.Gender)
-        .HasConversion(new EnumToStringConverter<Gender>());
+        .HasConversion(new EnumToStringConverter<Gender>(new ConverterMappingHints(size: 50)));
 }
 ```
 

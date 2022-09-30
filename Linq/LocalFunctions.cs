@@ -1,6 +1,6 @@
 namespace Linq;
 
-public class LocalFunctions
+public sealed class LocalFunctions
 {
     public int Factorial(int number) => number < 2
         ? 1

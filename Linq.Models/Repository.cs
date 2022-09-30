@@ -2,7 +2,7 @@ using static Linq.Models.Gender;
 
 namespace Linq.Models;
 
-public class Repository
+public sealed class Repository
 {
     public ICollection<Superhero> Superheroes { get; }
 

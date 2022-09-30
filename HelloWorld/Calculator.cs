@@ -1,6 +1,6 @@
 namespace HelloWorld;
 
-public class Calculator
+public sealed class Calculator
 {
     public int Add(string numbers)
     {

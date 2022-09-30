@@ -4,7 +4,7 @@ public enum LogLevel { Verbose, Warning, Error };
 
 public delegate void Logger(string input, LogLevel logLevel = LogLevel.Verbose);
 
-public class SubSystem
+public sealed class SubSystem
 {
     private Logger _logger;
 

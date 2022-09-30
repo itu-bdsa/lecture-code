@@ -1,6 +1,6 @@
 namespace Generics;
 
-public class CollectionUtilities
+public static class CollectionUtilities
 {
     public static IEnumerable<int> GetEven(IEnumerable<int> list, int stopMax = int.MaxValue)
     {

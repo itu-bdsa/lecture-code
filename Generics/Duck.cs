@@ -1,6 +1,6 @@
 namespace Generics;
 
-public class Duck : IEquatable<Duck>
+public sealed class Duck : IEquatable<Duck>
 {
     public int Id { get; set; }
 
@@ -15,7 +15,7 @@ public class Duck : IEquatable<Duck>
     /// <returns></returns>
     public bool Equals(Duck? other)
     {
-        if (other == null)
+        if (other is null)
         {
             return false;
         }

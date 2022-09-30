@@ -1,6 +1,6 @@
 namespace Generics.Tests;
 
-public class CollectionUtilitiesTests
+public sealed class CollectionUtilitiesTests
 {
     [Fact]
     public void GetEven_given_1_to_5_returns_2_and_4()
