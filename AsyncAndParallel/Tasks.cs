@@ -1,7 +1,6 @@
-#nullable disable
 namespace AsyncAndParallel;
 
-public class Tasks
+public sealed class Tasks
 {
     private static void Race(StringBuilder sb, string name, int count)
     {
@@ -169,7 +168,7 @@ public class Tasks
         var z = 0;
 
         var f0 = Task.Run(() => Console.WriteLine("f0 ok"));
-        var f1 = Task.Run(() => string.Join(null, null));
+        var f1 = Task.Run(() => string.Join(null, null!));
         var f2 = Task.Run(() => 42 / z);
         var f3 = Task.Run(() => { throw new Exception("EPIC FAIL!!!"); });
         var f4 = Task.Run(() => Console.WriteLine("f4 ok"));

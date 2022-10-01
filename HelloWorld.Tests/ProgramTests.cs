@@ -9,7 +9,7 @@ public sealed class ProgramTests
         using var writer = new StringWriter();
         Console.SetOut(writer);
 
-         // Act
+        // Act
         var program = Assembly.Load(nameof(HelloWorld));
         program.EntryPoint?.Invoke(null, new[] { Array.Empty<string>() });
 

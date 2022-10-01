@@ -1,6 +1,6 @@
 namespace AsyncAndParallel;
 
-public class Account
+public sealed class Account
 {
     public string Name { get; private set; }
 
@@ -23,7 +23,7 @@ public class Account
     }
 }
 
-public class Bank
+public sealed class Bank
 {
     public void Transfer(Account from, Account to, decimal amount)
     {
@@ -32,7 +32,7 @@ public class Bank
     }
 }
 
-public class Deadlock
+public sealed class Deadlock
 {
     public static void Run()
     {

@@ -1,4 +1,4 @@
-namespace AsyncAndParallel.UI;
+﻿namespace ConCurrencyCalculator;
 
 /// <summary>
 /// Interaction logic for App.xaml

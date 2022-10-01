@@ -1,6 +1,6 @@
 namespace MyApp.Infrastructure;
 
-public class CharacterRepository : ICharacterRepository
+public sealed class CharacterRepository : ICharacterRepository
 {
     private readonly ComicsContext _context;
 

@@ -1,6 +1,6 @@
 namespace AsyncAndParallel;
 
-public class ParallelLinq
+public sealed class ParallelLinq
 {
     public static void Run()
     {

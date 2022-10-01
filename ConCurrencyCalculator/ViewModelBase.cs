@@ -1,6 +1,6 @@
-namespace AsyncAndParallel.UI.ViewModels;
+namespace ConCurrencyCalculator;
 
-public class BaseViewModel : INotifyPropertyChanged
+public abstract class ViewModelBase : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 

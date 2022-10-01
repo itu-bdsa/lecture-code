@@ -1,4 +1,4 @@
-namespace AsyncAndParallel.UI;
+﻿namespace ConCurrencyCalculator;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -9,8 +9,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var client = new HttpClient();
-
-        DataContext = new MainWindowViewModel(client);
+        DataContext = new MainWindowViewModel();
     }
 }

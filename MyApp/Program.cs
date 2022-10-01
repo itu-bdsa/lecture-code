@@ -1,6 +1,4 @@
-﻿using MyApp.Infrastructure;
-
-var factory = new ComicsContextFactory();
+﻿var factory = new ComicsContextFactory();
 using var context = factory.CreateDbContext(args);
 
 // var character = new Character

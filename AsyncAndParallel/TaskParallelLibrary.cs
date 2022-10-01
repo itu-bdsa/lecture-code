@@ -1,6 +1,6 @@
 namespace AsyncAndParallel;
 
-public class TaskParallelLibrary
+public sealed class TaskParallelLibrary
 {
     public static void For()
     {

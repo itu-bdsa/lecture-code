@@ -1,6 +1,6 @@
 namespace AsyncAndParallel;
 
-public class Threads
+public sealed class Threads
 {
     /// <summary>
     /// Run an open Process Explorer...

@@ -1,6 +1,6 @@
 namespace AsyncAndParallel;
 
-public class ConcurrentCollections
+public sealed class ConcurrentCollections
 {
     static void Race(ConcurrentQueue<string> queue, string name, int count)
     {

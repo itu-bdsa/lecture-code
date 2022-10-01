@@ -1,6 +1,6 @@
 namespace AsyncAndParallel;
 
-public class RaceCondition
+public sealed class RaceCondition
 {
     private static Random _random = new Random();
 
@@ -36,7 +36,7 @@ public class RaceCondition
     }
 }
 
-public class FixedRace
+public sealed class FixedRace
 {
     private static Random _random = new Random();
 
@@ -74,7 +74,7 @@ public class FixedRace
     }
 }
 
-public class BehindTheScenes
+public sealed class BehindTheScenes
 {
     public static void Race(StringBuilder sb, string name, int count)
     {

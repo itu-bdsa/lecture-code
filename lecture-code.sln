@@ -1,41 +1,38 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{743D8C29-3566-4B41-8A93-64E53E25C25B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{743D8C29-3566-4B41-8A93-64E53E25C25B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.Tests", "HelloWorld.Tests\HelloWorld.Tests.csproj", "{62532223-7B3E-4885-9F70-E80C3B817315}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld.Tests", "HelloWorld.Tests\HelloWorld.Tests.csproj", "{62532223-7B3E-4885-9F70-E80C3B817315}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generics", "Generics\Generics.csproj", "{A6520644-2EF5-437D-98AB-31C3390B4515}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generics", "Generics\Generics.csproj", "{A6520644-2EF5-437D-98AB-31C3390B4515}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generics.Tests", "Generics.Tests\Generics.Tests.csproj", "{8DACB219-AB30-443F-BB69-13A3D79F1605}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generics.Tests", "Generics.Tests\Generics.Tests.csproj", "{8DACB219-AB30-443F-BB69-13A3D79F1605}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq", "Linq\Linq.csproj", "{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linq", "Linq\Linq.csproj", "{DBDED028-9405-4ECC-9F50-EA85AAC3D2FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq.Models", "Linq.Models\Linq.Models.csproj", "{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linq.Models", "Linq.Models\Linq.Models.csproj", "{60A93EC7-4BC0-4FF1-BD69-FF6A6D364FA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{F3802A9B-A77D-42E1-AAD4-CA15A771964B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{F3802A9B-A77D-42E1-AAD4-CA15A771964B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp", "MyApp\MyApp.csproj", "{0EF6794F-BD4B-4D32-965E-60A4CAA04EAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp", "MyApp\MyApp.csproj", "{0EF6794F-BD4B-4D32-965E-60A4CAA04EAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Core", "MyApp.Core\MyApp.Core.csproj", "{4BF09E4C-690B-4A45-9335-559156D3FA4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Core", "MyApp.Core\MyApp.Core.csproj", "{4BF09E4C-690B-4A45-9335-559156D3FA4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Infrastructure", "MyApp.Infrastructure\MyApp.Infrastructure.csproj", "{AA5C17B6-4447-4BAC-9EC8-1A66F2BD6691}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Infrastructure", "MyApp.Infrastructure\MyApp.Infrastructure.csproj", "{AA5C17B6-4447-4BAC-9EC8-1A66F2BD6691}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Infrastructure.Tests", "MyApp.Infrastructure.Tests\MyApp.Infrastructure.Tests.csproj", "{02407087-1F9F-4F77-82F7-4F348190A892}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Infrastructure.Tests", "MyApp.Infrastructure.Tests\MyApp.Infrastructure.Tests.csproj", "{02407087-1F9F-4F77-82F7-4F348190A892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Core.Tests", "MyApp.Core.Tests\MyApp.Core.Tests.csproj", "{83A8C492-EC65-435F-AF94-52FB1DFFDF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Core.Tests", "MyApp.Core.Tests\MyApp.Core.Tests.csproj", "{83A8C492-EC65-435F-AF94-52FB1DFFDF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncAndParallel", "AsyncAndParallel\AsyncAndParallel.csproj", "{730D2B09-3807-4B13-AD32-A87333561B48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncAndParallel", "AsyncAndParallel\AsyncAndParallel.csproj", "{730D2B09-3807-4B13-AD32-A87333561B48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{743D8C29-3566-4B41-8A93-64E53E25C25B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -90,5 +87,11 @@ Global
 		{730D2B09-3807-4B13-AD32-A87333561B48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{730D2B09-3807-4B13-AD32-A87333561B48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{730D2B09-3807-4B13-AD32-A87333561B48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1594B151-40C2-436B-BA5F-9EEF3B35F9A9}
 	EndGlobalSection
 EndGlobal
