@@ -9,9 +9,9 @@ public sealed class PowerRepository : IPowerRepository
         _context = context;
     }
 
-    public (Status, PowerDto) Create(PowerCreateDto power)
+    public async Task<(Status, PowerDto)> Create(PowerCreateDto power)
     {
-        var entity = _context.Powers.FirstOrDefault(c => c.Name == power.Name);
+        var entity = await _context.Powers.FirstOrDefaultAsync(c => c.Name == power.Name);
         Status status;
 
         if (entity is null)
@@ -19,7 +19,7 @@ public sealed class PowerRepository : IPowerRepository
             entity = new Power(power.Name);
 
             _context.Powers.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             status = Created;
         }
@@ -33,50 +33,50 @@ public sealed class PowerRepository : IPowerRepository
         return (status, created);
     }
 
-    public PowerDto? Find(int powerId)
+    public async Task<PowerDto?> Find(int powerId)
     {
         var cities = from c in _context.Powers
                      where c.Id == powerId
                      select new PowerDto(c.Id, c.Name);
 
-        return cities.FirstOrDefault();
+        return await cities.FirstOrDefaultAsync();
     }
 
-    public IReadOnlyCollection<PowerDto> Read()
+    public async Task<IReadOnlyCollection<PowerDto>> Read()
     {
         var cities = from c in _context.Powers
                      orderby c.Name
                      select new PowerDto(c.Id, c.Name);
 
-        return cities.ToArray();
+        return await cities.ToArrayAsync();
     }
 
-    public Status Update(PowerDto power)
+    public async Task<Status> Update(PowerDto power)
     {
-        var entity = _context.Powers.Find(power.Id);
+        var entity = await _context.Powers.FindAsync(power.Id);
         Status status;
 
         if (entity is null)
         {
             status = NotFound;
         }
-        else if (_context.Powers.FirstOrDefault(c => c.Id != power.Id && c.Name == power.Name) != null)
+        else if (await _context.Powers.FirstOrDefaultAsync(c => c.Id != power.Id && c.Name == power.Name) != null)
         {
             status = Conflict;
         }
         else
         {
             entity.Name = power.Name;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             status = Updated;
         }
 
         return status;
     }
 
-    public Status Delete(int powerId)
+    public async Task<Status> Delete(int powerId)
     {
-        var power = _context.Powers.Include(c => c.Characters).FirstOrDefault(c => c.Id == powerId);
+        var power = await _context.Powers.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == powerId);
         Status status;
 
         if (power is null)
@@ -90,7 +90,7 @@ public sealed class PowerRepository : IPowerRepository
         else
         {
             _context.Powers.Remove(power);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             status = Deleted;
         }

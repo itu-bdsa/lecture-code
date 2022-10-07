@@ -45,10 +45,10 @@ public sealed class Threads
 
     public static void Overlapping()
     {
-        var t = new Thread(WriteX);
+        var t = new Thread(WriteX) { IsBackground = true };
         t.Start();
 
-        foreach (var _ in Enumerable.Range(0, 400))
+        foreach (var _ in Enumerable.Range(0, 100))
         {
             Console.Write('Y');
         }
@@ -111,7 +111,7 @@ public sealed class Threads
         };
 
         t1.Start();
-        // t1.Join();
+        t1.Join();
         Console.WriteLine("Thread t has ended");
         Console.WriteLine("MAIN!!!");
         Console.WriteLine("Done waiting...");

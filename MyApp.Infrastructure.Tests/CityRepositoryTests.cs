@@ -1,6 +1,6 @@
 namespace MyApp.Infrastructure.Tests;
 
-public sealed class CityRepositoryTests : IDisposable
+public sealed class CityRepositoryTests : IAsyncDisposable
 {
     private readonly SqliteConnection _connection;
     private readonly ComicsContext _context;
@@ -23,9 +23,9 @@ public sealed class CityRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Create()
+    public async Task Create()
     {
-        var (response, created) = _repository.Create(new CityCreateDto("Central City"));
+        var (response, created) = await _repository.Create(new CityCreateDto("Central City"));
 
         response.Should().Be(Created);
 
@@ -33,9 +33,9 @@ public sealed class CityRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Create_Conflict()
+    public async Task Create_Conflict()
     {
-        var (response, city) = _repository.Create(new CityCreateDto("Gotham City"));
+        var (response, city) = await _repository.Create(new CityCreateDto("Gotham City"));
 
         response.Should().Be(Conflict);
 
@@ -43,69 +43,69 @@ public sealed class CityRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Find() => _repository.Find(2).Should().Be(new CityDto(2, "Gotham City"));
+    public async Task Find() => (await _repository.Find(2)).Should().Be(new CityDto(2, "Gotham City"));
 
     [Fact]
-    public void Find_Non_Existing() => _repository.Find(42).Should().BeNull();
+    public async Task Find_Non_Existing() => (await _repository.Find(42)).Should().BeNull();
 
     [Fact]
-    public void Read() => _repository.Read().Should().BeEquivalentTo(new[] { new CityDto(1, "Metropolis"), new CityDto(2, "Gotham City") });
+    public async Task Read() => (await _repository.Read()).Should().BeEquivalentTo(new[] { new CityDto(1, "Metropolis"), new CityDto(2, "Gotham City") });
 
     [Fact]
-    public void Update_Non_Existing() => _repository.Update(new CityDto(42, "Central City")).Should().Be(NotFound);
+    public async Task Update_Non_Existing() => (await _repository.Update(new CityDto(42, "Central City"))).Should().Be(NotFound);
 
     [Fact]
-    public void Update_Conflict()
+    public async Task Update_Conflict()
     {
-        var response = _repository.Update(new CityDto(2, "Metropolis"));
+        var response = await _repository.Update(new CityDto(2, "Metropolis"));
 
         response.Should().Be(Conflict);
 
-        var entity = _context.Cities.Find(2)!;
+        var entity = await _context.Cities.FindAsync(2);
 
-        entity.Name.Should().Be("Gotham City");
+        entity!.Name.Should().Be("Gotham City");
     }
 
     [Fact]
-    public void Update()
+    public async Task Update()
     {
-        var response = _repository.Update(new CityDto(2, "Central City"));
+        var response = await _repository.Update(new CityDto(2, "Central City"));
 
         response.Should().Be(Updated);
 
-        var entity = _context.Cities.Find(2)!;
+        var entity = await _context.Cities.FindAsync(2)!;
 
-        entity.Name.Should().Be("Central City");
+        entity!.Name.Should().Be("Central City");
     }
 
     [Fact]
-    public void Delete_Non_Existing() => _repository.Delete(42).Should().Be(NotFound);
+    public async Task Delete_Non_Existing() => (await _repository.Delete(42)).Should().Be(NotFound);
 
     [Fact]
-    public void Delete()
+    public async Task Delete()
     {
-        var response = _repository.Delete(2);
+        var response = await _repository.Delete(2);
 
         response.Should().Be(Deleted);
 
-        var entity = _context.Cities.Find(2);
+        var entity = await _context.Cities.FindAsync(2);
 
         entity.Should().BeNull();
     }
 
     [Fact]
-    public void Delete_Conflict()
+    public async Task Delete_Conflict()
     {
-        var response = _repository.Delete(1);
+        var response = await _repository.Delete(1);
 
         response.Should().Be(Conflict);
 
-        _context.Cities.Find(1).Should().NotBeNull();
+        (await _context.Cities.FindAsync(1)).Should().NotBeNull();
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _context.Dispose();
-        _connection.Dispose();
+        await _context.DisposeAsync();
+        await _connection.DisposeAsync();
     }
 }

@@ -116,7 +116,7 @@ public sealed class Tasks
         var tokenSource = new CancellationTokenSource();
 
         var t1 = Task.Factory.StartNew(() => Race(sb, "One", 50, tokenSource.Token));
-        var t2 = Task.Run(() => Race(sb, "Two", 50, tokenSource.Token));
+        var t2 = Task.Run(() => Race(sb, "Two", 50));
 
         Task.Delay(20).Wait();
         tokenSource.Cancel();

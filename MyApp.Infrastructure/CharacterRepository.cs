@@ -9,7 +9,7 @@ public sealed class CharacterRepository : ICharacterRepository
         _context = context;
     }
 
-    public (Status, CharacterDetailsDto) Create(CharacterCreateDto character)
+    public async Task<(Status, CharacterDetailsDto)> Create(CharacterCreateDto character)
     {
         var entity = new Character
         {
@@ -19,43 +19,45 @@ public sealed class CharacterRepository : ICharacterRepository
             FirstAppearance = character.FirstAppearance,
             Occupation = character.Occupation,
             Gender = character.Gender,
-            City = CreateOrUpdateCity(character.City),
+            City = await CreateOrUpdateCity(character.City),
             ImageUrl = character.ImageUrl,
-            Powers = CreateOrUpdatePowers(character.Powers).ToHashSet()
+            Powers = await CreateOrUpdatePowers(character.Powers).ToHashSetAsync()
         };
 
         _context.Characters.Add(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return (Created, new CharacterDetailsDto(entity.Id, entity.AlterEgo, entity.GivenName, entity.Surname, entity.FirstAppearance, entity.Occupation, entity.City?.Name, entity.Gender, entity.ImageUrl, entity.Powers.Select(p => p.Name).ToHashSet()));
     }
 
-    public CharacterDetailsDto? Find(int characterId)
+    public async Task<CharacterDetailsDto?> Find(int characterId)
     {
         var characters = from c in _context.Characters
                          let powers = c.Powers.Select(p => p.Name).ToHashSet()
                          where c.Id == characterId
                          select new CharacterDetailsDto(c.Id, c.AlterEgo, c.GivenName, c.Surname, c.FirstAppearance, c.Occupation, c.City == null ? null : c.City.Name, c.Gender, c.ImageUrl, powers);
 
-        return characters.FirstOrDefault();
+        return await characters.FirstOrDefaultAsync();
     }
 
-    public IReadOnlyCollection<CharacterDto> Read()
+    public async Task<IReadOnlyCollection<CharacterDto>> Read()
     {
         var characters = from c in _context.Characters
                          select new CharacterDto(c.Id, c.AlterEgo, c.GivenName, c.Surname);
 
-        return characters.ToList();
+        return await characters.ToListAsync();
     }
 
-    public Status Update(CharacterUpdateDto character)
+    public async Task<Status> Update(CharacterUpdateDto character)
     {
-        var entity = _context.Characters.Find(character.Id);
+        var entity = await _context.Characters.FindAsync(character.Id);
 
         if (entity == null)
         {
             return NotFound;
         }
+
+        var powers = CreateOrUpdatePowers(character.Powers);
 
         entity.AlterEgo = character.AlterEgo;
         entity.GivenName = character.GivenName;
@@ -63,18 +65,18 @@ public sealed class CharacterRepository : ICharacterRepository
         entity.FirstAppearance = character.FirstAppearance;
         entity.Occupation = character.Occupation;
         entity.Gender = character.Gender;
-        entity.City = CreateOrUpdateCity(character.City);
+        entity.City = await CreateOrUpdateCity(character.City);
         entity.ImageUrl = character.ImageUrl;
-        entity.Powers = CreateOrUpdatePowers(character.Powers).ToHashSet();
+        entity.Powers = await CreateOrUpdatePowers(character.Powers).ToHashSetAsync();
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Updated;
     }
 
-    public Status Delete(int characterId)
+    public async Task<Status> Delete(int characterId)
     {
-        var entity = _context.Characters.Find(characterId);
+        var entity = await _context.Characters.FindAsync(characterId);
 
         if (entity == null)
         {
@@ -82,16 +84,16 @@ public sealed class CharacterRepository : ICharacterRepository
         }
 
         _context.Characters.Remove(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Deleted;
     }
 
-    private City? CreateOrUpdateCity(string? cityName) => cityName is null ? null : _context.Cities.FirstOrDefault(c => c.Name == cityName) ?? new City(cityName);
+    private async Task<City?> CreateOrUpdateCity(string? cityName) => string.IsNullOrWhiteSpace(cityName) ? null : await _context.Cities.FirstOrDefaultAsync(c => c.Name == cityName) ?? new City(cityName);
 
-    private IEnumerable<Power> CreateOrUpdatePowers(IEnumerable<string> powerNames)
+    private async IAsyncEnumerable<Power> CreateOrUpdatePowers(IEnumerable<string> powerNames)
     {
-        var existing = _context.Powers.Where(p => powerNames.Contains(p.Name)).ToDictionary(p => p.Name);
+        var existing = await _context.Powers.Where(p => powerNames.Contains(p.Name)).ToDictionaryAsync(p => p.Name);
 
         foreach (var powerName in powerNames)
         {

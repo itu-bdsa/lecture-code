@@ -1,4 +1,4 @@
-Threads.SpawnThread();
+// Threads.SpawnThread();
 // Threads.SpawnMultipleThreads(100000);
 // Threads.Overlapping();
 // Threads.OverlappingWithArguments();
@@ -25,7 +25,7 @@ Threads.SpawnThread();
 // Tasks.Fail();
 
 // TaskParallelLibrary.For();
-// TaskParallelLibrary.ForEach();
+TaskParallelLibrary.ForEach();
 // TaskParallelLibrary.Invoke();
 
 // ParallelLinq.Run();

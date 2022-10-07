@@ -47,26 +47,26 @@ namespace ConCurrencyCalculator
             _dispatcherTimer.Start();
         }
 
-        public ICommand Calculate => new Command(_ => CalculateRates());
+        public ICommand Calculate => new Command(async _ => await CalculateRates());
 
-        private void CalculateRates()
+        private async Task CalculateRates()
         {
             _stopWatch.Restart();
 
-            USD = GetRate("DKK", "USD", DKK);
-            GBP = GetRate("DKK", "GBP", DKK);
-            EUR = GetRate("DKK", "EUR", DKK);
+            USD = await GetRate("DKK", "USD", DKK);
+            GBP = await GetRate("DKK", "GBP", DKK);
+            EUR = await GetRate("DKK", "EUR", DKK);
 
             _stopWatch.Stop();
         }
 
-        private double GetRate(string from, string to, double amount)
+        private async Task<double> GetRate(string from, string to, double amount)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             var path = $"currency_data/convert?to={to}&from={from}&amount={amount}";
 
-            var json = _client.GetStringAsync(path).Result;
+            var json = await _client.GetStringAsync(path);
 
             dynamic obj = JsonConvert.DeserializeObject(json)!;
 

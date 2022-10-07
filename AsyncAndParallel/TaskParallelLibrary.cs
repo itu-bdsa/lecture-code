@@ -16,9 +16,9 @@ public sealed class TaskParallelLibrary
 
         var numbers = Enumerable.Range(0, 1000);
 
-        var options = new ParallelOptions { MaxDegreeOfParallelism = 1 };
+        var options = new ParallelOptions { MaxDegreeOfParallelism = 16 };
 
-        Parallel.ForEach(numbers, number =>
+        Parallel.ForEach(numbers, options, number =>
         {
             Task.Delay(1).Wait();
             Console.WriteLine(number);
