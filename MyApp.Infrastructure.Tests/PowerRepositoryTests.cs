@@ -1,6 +1,6 @@
 namespace MyApp.Infrastructure.Tests;
 
-public sealed class PowerRepositoryTests : IDisposable
+public sealed class PowerRepositoryTests : IAsyncDisposable
 {
     private readonly SqliteConnection _connection;
     private readonly ComicsContext _context;
@@ -26,9 +26,9 @@ public sealed class PowerRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Create()
+    public async Task Create()
     {
-        var (response, created) = _repository.Create(new PowerCreateDto("super speed"));
+        var (response, created) = await _repository.Create(new PowerCreateDto("super speed"));
 
         response.Should().Be(Created);
 
@@ -36,9 +36,9 @@ public sealed class PowerRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Create_Conflict()
+    public async Task Create_Conflict()
     {
-        var (response, power) = _repository.Create(new PowerCreateDto("invulnerability"));
+        var (response, power) = await _repository.Create(new PowerCreateDto("invulnerability"));
 
         response.Should().Be(Conflict);
 
@@ -46,21 +46,21 @@ public sealed class PowerRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Find_Non_Existing() => _repository.Find(42).Should().BeNull();
+    public async Task Find_Non_Existing() => (await _repository.Find(42)).Should().BeNull();
 
     [Fact]
-    public void Find() => _repository.Find(2).Should().Be(new PowerDto(2, "invulnerability"));
+    public async Task Find() => (await _repository.Find(2)).Should().Be(new PowerDto(2, "invulnerability"));
 
     [Fact]
-    public void Read() => _repository.Read().Should().BeEquivalentTo(new[] { new PowerDto(1, "flight"), new PowerDto(2, "invulnerability"), new PowerDto(3, "combat strategy") });
+    public async Task Read() => (await _repository.Read()).Should().BeEquivalentTo(new[] { new PowerDto(1, "flight"), new PowerDto(2, "invulnerability"), new PowerDto(3, "combat strategy") });
 
     [Fact]
-    public void Update_Non_Existing() => _repository.Update(new PowerDto(42, "brilliant deductive skill")).Should().Be(NotFound);
+    public async Task Update_Non_Existing() => (await _repository.Update(new PowerDto(42, "brilliant deductive skill"))).Should().Be(NotFound);
 
     [Fact]
-    public void Update_Conflict()
+    public async Task Update_Conflict()
     {
-        var response = _repository.Update(new PowerDto(2, "flight"));
+        var response = await _repository.Update(new PowerDto(2, "flight"));
 
         response.Should().Be(Conflict);
 
@@ -70,46 +70,45 @@ public sealed class PowerRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Update()
+    public async Task Update()
     {
-        var response = _repository.Update(new PowerDto(2, "brilliant deductive skill"));
+        var response = await _repository.Update(new PowerDto(2, "brilliant deductive skill"));
 
         response.Should().Be(Updated);
 
-        var entity = _context.Powers.Find(2)!;
+        var entity = await _context.Powers.FindAsync(2)!;
 
-        entity.Name.Should().Be("brilliant deductive skill");
+        entity!.Name.Should().Be("brilliant deductive skill");
     }
 
     [Fact]
-    public void Delete_Non_Existing() => _repository.Delete(42).Should().Be(NotFound);
+    public async Task Delete_Non_Existing() => (await _repository.Delete(42)).Should().Be(NotFound);
 
     [Fact]
-    public void Delete()
+    public async Task Delete()
     {
-        var response = _repository.Delete(3);
+        var response = await _repository.Delete(3);
 
         response.Should().Be(Deleted);
 
-        var entity = _context.Powers.Find(3);
+        var entity = await _context.Powers.FindAsync(3);
 
         entity.Should().BeNull();
     }
 
     [Fact]
-    public void Delete_Conflict()
+    public async Task Delete_Conflict()
     {
-        var response = _repository.Delete(1);
+        var response = await _repository.Delete(1);
 
         response.Should().Be(Conflict);
 
-        _context.Powers.Find(1).Should().NotBeNull();
+        (await _context.Powers.FindAsync(1)).Should().NotBeNull();
     }
 
-
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _context.Dispose();
-        _connection.Dispose();
+        await _context.DisposeAsync();
+        await _connection.DisposeAsync();
     }
 }

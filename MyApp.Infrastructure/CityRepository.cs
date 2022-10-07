@@ -9,9 +9,9 @@ public sealed class CityRepository : ICityRepository
         _context = context;
     }
 
-    public (Status, CityDto) Create(CityCreateDto city)
+    public async Task<(Status, CityDto)> Create(CityCreateDto city)
     {
-        var entity = _context.Cities.FirstOrDefault(c => c.Name == city.Name);
+        var entity = await _context.Cities.FirstOrDefaultAsync(c => c.Name == city.Name);
         Status status;
 
         if (entity is null)
@@ -19,7 +19,7 @@ public sealed class CityRepository : ICityRepository
             entity = new City(city.Name);
 
             _context.Cities.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             status = Created;
         }
@@ -33,50 +33,50 @@ public sealed class CityRepository : ICityRepository
         return (status, created);
     }
 
-    public CityDto? Find(int cityId)
+    public async Task<CityDto?> Find(int cityId)
     {
         var cities = from c in _context.Cities
                      where c.Id == cityId
                      select new CityDto(c.Id, c.Name);
 
-        return cities.FirstOrDefault();
+        return await cities.FirstOrDefaultAsync();
     }
 
-    public IReadOnlyCollection<CityDto> Read()
+    public async Task<IReadOnlyCollection<CityDto>> Read()
     {
         var cities = from c in _context.Cities
                      orderby c.Name
                      select new CityDto(c.Id, c.Name);
 
-        return cities.ToArray();
+        return await cities.ToArrayAsync();
     }
 
-    public Status Update(CityDto city)
+    public async Task<Status> Update(CityDto city)
     {
-        var entity = _context.Cities.Find(city.Id);
+        var entity = await _context.Cities.FindAsync(city.Id);
         Status status;
 
         if (entity is null)
         {
             status = NotFound;
         }
-        else if (_context.Cities.FirstOrDefault(c => c.Id != city.Id && c.Name == city.Name) != null)
+        else if (await _context.Cities.FirstOrDefaultAsync(c => c.Id != city.Id && c.Name == city.Name) != null)
         {
             status = Conflict;
         }
         else
         {
             entity.Name = city.Name;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             status = Updated;
         }
 
         return status;
     }
 
-    public Status Delete(int cityId)
+    public async Task<Status> Delete(int cityId)
     {
-        var city = _context.Cities.Include(c => c.Characters).FirstOrDefault(c => c.Id == cityId);
+        var city = await _context.Cities.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == cityId);
         Status status;
 
         if (city is null)
@@ -90,7 +90,7 @@ public sealed class CityRepository : ICityRepository
         else
         {
             _context.Cities.Remove(city);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             status = Deleted;
         }
