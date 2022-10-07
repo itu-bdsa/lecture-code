@@ -6,7 +6,7 @@ public sealed class ParallelLinq
     {
         var numbers = Enumerable.Range(1, 5000000);
 
-        var query = from n in numbers.AsParallel().AsOrdered()
+        var query = from n in numbers
                     where Enumerable.Range(2, (int)Math.Sqrt(n)).All(i => n % i > 0)
                     select n;
 

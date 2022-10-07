@@ -10,8 +10,8 @@ public sealed class Threads
         var thread = new Thread(() =>
         {
             Console.WriteLine("I'm a thread");
-            Thread.Sleep(TimeSpan.FromSeconds(5));
-            Console.WriteLine("Thread done");
+            Thread.Sleep(5000);
+            Console.WriteLine("I'm a done");
         });
         thread.Start();
     }
@@ -48,7 +48,7 @@ public sealed class Threads
         var t = new Thread(WriteX);
         t.Start();
 
-        for (var i = 0; i < 400; i++)
+        foreach (var _ in Enumerable.Range(0, 400))
         {
             Console.Write('Y');
         }
@@ -56,7 +56,7 @@ public sealed class Threads
 
     private static void WriteX()
     {
-        for (var i = 0; i < 400; i++)
+        for (var i = 0; i < 100; i++)
         {
             Console.Write('X');
         }
@@ -73,10 +73,13 @@ public sealed class Threads
 
     private static void Write(object? c)
     {
-        Thread.Sleep(2000);
         if (c is char ch)
         {
-            Write(ch, 40);
+            for (var i = 0; i < 100; i++)
+            {
+                Console.Write(c);
+            }
+            Console.WriteLine();
         }
     }
 
@@ -100,6 +103,7 @@ public sealed class Threads
                 for (var i = 0; i < 100; i++)
                 {
                     Console.WriteLine($"Hello {i}");
+                    Thread.Sleep(100);
                 }
             })
         {
@@ -107,7 +111,7 @@ public sealed class Threads
         };
 
         t1.Start();
-        t1.Join();
+        // t1.Join();
         Console.WriteLine("Thread t has ended");
         Console.WriteLine("MAIN!!!");
         Console.WriteLine("Done waiting...");

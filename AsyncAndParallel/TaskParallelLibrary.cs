@@ -24,7 +24,7 @@ public sealed class TaskParallelLibrary
             Console.WriteLine(number);
         });
 
-        Console.WriteLine($"That took: {sw.ElapsedMilliseconds} milis");
+        Console.WriteLine($"That took: {sw.ElapsedMilliseconds} milliseconds");
     }
 
     public static void Invoke()

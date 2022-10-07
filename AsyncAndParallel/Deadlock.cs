@@ -109,7 +109,7 @@ public sealed class Deadlock
                     Thread.Sleep(500);
                     Console.WriteLine($"t2 lock acquired on account {a.Name}");
                     bank.Transfer(b, a, 100.0m);
-                    Console.WriteLine("transfered 100.00 from b to a");
+                    Console.WriteLine("transferred 100.00 from b to a");
                 }
                 Console.WriteLine($"t2 lock released on account {a.Name}");
             }
@@ -146,7 +146,7 @@ public sealed class Deadlock
                     Thread.Sleep(500);
                     Console.WriteLine($"t1 lock acquired on account {accounts[1].Name}");
                     bank.Transfer(a, b, 100.0m);
-                    Console.WriteLine("transfered 100.00 from a to b");
+                    Console.WriteLine("transferred 100.00 from a to b");
                 }
                 Console.WriteLine($"t1 lock released on account {accounts[1].Name}");
             }

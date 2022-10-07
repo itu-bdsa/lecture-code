@@ -1,4 +1,4 @@
-// Threads.SpawnThread();
+Threads.SpawnThread();
 // Threads.SpawnMultipleThreads(100000);
 // Threads.Overlapping();
 // Threads.OverlappingWithArguments();
@@ -30,4 +30,4 @@
 
 // ParallelLinq.Run();
 
-ConcurrentCollections.Race();
+// ConcurrentCollections.Race();
