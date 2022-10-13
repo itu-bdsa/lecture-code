@@ -53,18 +53,18 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
 
         var expected = new CharacterDetailsDto(3, "Batman", "Bruce", "Wayne", 1939, "CEO of Wayne Enterprises", "Gotham City", Male, "https://images.com/batman.png", new HashSet<string> { "exceptional martial artist", "combat strategy", "inexhaustible wealth", "brilliant deductive skill", "advanced technology" });
 
-        var (status, created) = await _repository.Create(character);
+        var (status, created) = await _repository.CreateAsync(character);
 
         status.Should().Be(Created);
         created.Should().BeEquivalentTo(expected);
-        (await _repository.Find(3)).Should().BeEquivalentTo(expected);
+        (await _repository.FindAsync(3)).Should().BeEquivalentTo(expected);
     }
 
     [Fact]
-    public async Task Find() => (await _repository.Find(2)).Should().BeEquivalentTo(new CharacterDetailsDto(2, "Catwoman", "Selina", "Kyle", 1940, "Thief", "Gotham City", Female, "https://images.com/catwoman.png", new HashSet<string> { "exceptional martial artist", "gymnastic ability", "combat skill" }));
+    public async Task Find() => (await _repository.FindAsync(2)).Should().BeEquivalentTo(new CharacterDetailsDto(2, "Catwoman", "Selina", "Kyle", 1940, "Thief", "Gotham City", Female, "https://images.com/catwoman.png", new HashSet<string> { "exceptional martial artist", "gymnastic ability", "combat skill" }));
 
     [Fact]
-    public async Task Find_Non_Existing() => (await _repository.Find(42)).Should().BeNull();
+    public async Task Find_Non_Existing() => (await _repository.FindAsync(42)).Should().BeNull();
 
     [Fact]
     public async Task Read()
@@ -86,10 +86,10 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
 
         var expected = new CharacterDetailsDto(1, "Wonder Woman", "Diana", null, 1941, "Amazon Princess", "Themyscira", Female, "https://images.com/wonder-woman.png", new HashSet<string> { "super strength", "invulnerability", "flight", "combat skill", "combat strategy", "superhuman agility", "healing factor", "magic weaponry" });
 
-        var status = await _repository.Update(character);
+        var status = await _repository.UpdateAsync(character);
 
         status.Should().Be(Updated);
-        (await _repository.Find(1)).Should().BeEquivalentTo(expected);
+        (await _repository.FindAsync(1)).Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
     {
         var character = new CharacterUpdateDto(42, "Wonder Woman", "Diana", null, 1941, "Amazon Princess", "Themyscira", Female, "https://images.com/wonder-woman.png", new HashSet<string> { "super strength", "invulnerability", "flight", "combat skill", "combat strategy", "superhuman agility", "healing factor", "magic weaponry" });
 
-        var status = await _repository.Update(character);
+        var status = await _repository.UpdateAsync(character);
 
         status.Should().Be(NotFound);
     }
@@ -105,14 +105,14 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Delete()
     {
-        var status = await _repository.Delete(1);
+        var status = await _repository.DeleteAsync(1);
 
         status.Should().Be(Deleted);
         (await _context.Characters.FindAsync(1)).Should().BeNull();
     }
 
     [Fact]
-    public async Task Delete_Non_Existing() => (await _repository.Delete(42)).Should().Be(NotFound);
+    public async Task Delete_Non_Existing() => (await _repository.DeleteAsync(42)).Should().Be(NotFound);
 
     public async ValueTask DisposeAsync()
     {

@@ -9,7 +9,7 @@ public sealed class CityRepository : ICityRepository
         _context = context;
     }
 
-    public async Task<(Status, CityDto)> Create(CityCreateDto city)
+    public async Task<(Status, CityDto)> CreateAsync(CityCreateDto city)
     {
         var entity = await _context.Cities.FirstOrDefaultAsync(c => c.Name == city.Name);
         Status status;
@@ -33,7 +33,7 @@ public sealed class CityRepository : ICityRepository
         return (status, created);
     }
 
-    public async Task<CityDto?> Find(int cityId)
+    public async Task<CityDto?> FindAsync(int cityId)
     {
         var cities = from c in _context.Cities
                      where c.Id == cityId
@@ -42,7 +42,7 @@ public sealed class CityRepository : ICityRepository
         return await cities.FirstOrDefaultAsync();
     }
 
-    public async Task<IReadOnlyCollection<CityDto>> Read()
+    public async Task<IReadOnlyCollection<CityDto>> ReadAsync()
     {
         var cities = from c in _context.Cities
                      orderby c.Name
@@ -51,7 +51,7 @@ public sealed class CityRepository : ICityRepository
         return await cities.ToArrayAsync();
     }
 
-    public async Task<Status> Update(CityDto city)
+    public async Task<Status> UpdateAsync(CityDto city)
     {
         var entity = await _context.Cities.FindAsync(city.Id);
         Status status;
@@ -74,7 +74,7 @@ public sealed class CityRepository : ICityRepository
         return status;
     }
 
-    public async Task<Status> Delete(int cityId)
+    public async Task<Status> DeleteAsync(int cityId)
     {
         var city = await _context.Cities.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == cityId);
         Status status;

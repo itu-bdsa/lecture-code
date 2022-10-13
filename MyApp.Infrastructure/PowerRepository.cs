@@ -9,7 +9,7 @@ public sealed class PowerRepository : IPowerRepository
         _context = context;
     }
 
-    public async Task<(Status, PowerDto)> Create(PowerCreateDto power)
+    public async Task<(Status, PowerDto)> CreateAsync(PowerCreateDto power)
     {
         var entity = await _context.Powers.FirstOrDefaultAsync(c => c.Name == power.Name);
         Status status;
@@ -33,7 +33,7 @@ public sealed class PowerRepository : IPowerRepository
         return (status, created);
     }
 
-    public async Task<PowerDto?> Find(int powerId)
+    public async Task<PowerDto?> FindAsync(int powerId)
     {
         var cities = from c in _context.Powers
                      where c.Id == powerId
@@ -42,7 +42,7 @@ public sealed class PowerRepository : IPowerRepository
         return await cities.FirstOrDefaultAsync();
     }
 
-    public async Task<IReadOnlyCollection<PowerDto>> Read()
+    public async Task<IReadOnlyCollection<PowerDto>> ReadAsync()
     {
         var cities = from c in _context.Powers
                      orderby c.Name
@@ -51,7 +51,7 @@ public sealed class PowerRepository : IPowerRepository
         return await cities.ToArrayAsync();
     }
 
-    public async Task<Status> Update(PowerDto power)
+    public async Task<Status> UpdateAsync(PowerDto power)
     {
         var entity = await _context.Powers.FindAsync(power.Id);
         Status status;
@@ -74,7 +74,7 @@ public sealed class PowerRepository : IPowerRepository
         return status;
     }
 
-    public async Task<Status> Delete(int powerId)
+    public async Task<Status> DeleteAsync(int powerId)
     {
         var power = await _context.Powers.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == powerId);
         Status status;

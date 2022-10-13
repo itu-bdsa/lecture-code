@@ -9,7 +9,7 @@ public sealed class CharacterRepository : ICharacterRepository
         _context = context;
     }
 
-    public async Task<(Status, CharacterDetailsDto)> Create(CharacterCreateDto character)
+    public async Task<(Status, CharacterDetailsDto)> CreateAsync(CharacterCreateDto character)
     {
         var entity = new Character
         {
@@ -30,7 +30,7 @@ public sealed class CharacterRepository : ICharacterRepository
         return (Created, new CharacterDetailsDto(entity.Id, entity.AlterEgo, entity.GivenName, entity.Surname, entity.FirstAppearance, entity.Occupation, entity.City?.Name, entity.Gender, entity.ImageUrl, entity.Powers.Select(p => p.Name).ToHashSet()));
     }
 
-    public async Task<CharacterDetailsDto?> Find(int characterId)
+    public async Task<CharacterDetailsDto?> FindAsync(int characterId)
     {
         var characters = from c in _context.Characters
                          let powers = c.Powers.Select(p => p.Name).ToHashSet()
@@ -48,7 +48,7 @@ public sealed class CharacterRepository : ICharacterRepository
         return await characters.ToListAsync();
     }
 
-    public async Task<Status> Update(CharacterUpdateDto character)
+    public async Task<Status> UpdateAsync(CharacterUpdateDto character)
     {
         var entity = await _context.Characters.FindAsync(character.Id);
 
@@ -74,7 +74,7 @@ public sealed class CharacterRepository : ICharacterRepository
         return Updated;
     }
 
-    public async Task<Status> Delete(int characterId)
+    public async Task<Status> DeleteAsync(int characterId)
     {
         var entity = await _context.Characters.FindAsync(characterId);
 

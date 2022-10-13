@@ -2,9 +2,9 @@ namespace MyApp.Core;
 
 public interface ICharacterRepository
 {
-    Task<(Status, CharacterDetailsDto)> Create(CharacterCreateDto character);
-    Task<CharacterDetailsDto?> Find(int characterId);
+    Task<(Status, CharacterDetailsDto)> CreateAsync(CharacterCreateDto character);
+    Task<CharacterDetailsDto?> FindAsync(int characterId);
     Task<IReadOnlyCollection<CharacterDto>> Read();
-    Task<Status> Update(CharacterUpdateDto character);
-    Task<Status> Delete(int characterId);
+    Task<Status> UpdateAsync(CharacterUpdateDto character);
+    Task<Status> DeleteAsync(int characterId);
 }
