@@ -25,9 +25,9 @@
 // Tasks.Fail();
 
 // TaskParallelLibrary.For();
-TaskParallelLibrary.ForEach();
+// TaskParallelLibrary.ForEach();
 // TaskParallelLibrary.Invoke();
 
-// ParallelLinq.Run();
+ParallelLinq.Run();
 
 // ConcurrentCollections.Race();
