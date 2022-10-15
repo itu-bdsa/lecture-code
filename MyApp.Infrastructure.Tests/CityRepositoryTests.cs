@@ -25,7 +25,7 @@ public sealed class CityRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Create()
     {
-        var (response, created) = await _repository.Create(new CityCreateDto("Central City"));
+        var (response, created) = await _repository.CreateAsync(new CityCreateDto("Central City"));
 
         response.Should().Be(Created);
 
@@ -35,7 +35,7 @@ public sealed class CityRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Create_Conflict()
     {
-        var (response, city) = await _repository.Create(new CityCreateDto("Gotham City"));
+        var (response, city) = await _repository.CreateAsync(new CityCreateDto("Gotham City"));
 
         response.Should().Be(Conflict);
 
@@ -43,21 +43,21 @@ public sealed class CityRepositoryTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task Find() => (await _repository.Find(2)).Should().Be(new CityDto(2, "Gotham City"));
+    public async Task Find() => (await _repository.FindAsync(2)).Should().Be(new CityDto(2, "Gotham City"));
 
     [Fact]
-    public async Task Find_Non_Existing() => (await _repository.Find(42)).Should().BeNull();
+    public async Task Find_Non_Existing() => (await _repository.FindAsync(42)).Should().BeNull();
 
     [Fact]
-    public async Task Read() => (await _repository.Read()).Should().BeEquivalentTo(new[] { new CityDto(1, "Metropolis"), new CityDto(2, "Gotham City") });
+    public async Task Read() => (await _repository.ReadAsync()).Should().BeEquivalentTo(new[] { new CityDto(1, "Metropolis"), new CityDto(2, "Gotham City") });
 
     [Fact]
-    public async Task Update_Non_Existing() => (await _repository.Update(new CityDto(42, "Central City"))).Should().Be(NotFound);
+    public async Task Update_Non_Existing() => (await _repository.UpdateAsync(new CityDto(42, "Central City"))).Should().Be(NotFound);
 
     [Fact]
     public async Task Update_Conflict()
     {
-        var response = await _repository.Update(new CityDto(2, "Metropolis"));
+        var response = await _repository.UpdateAsync(new CityDto(2, "Metropolis"));
 
         response.Should().Be(Conflict);
 
@@ -69,7 +69,7 @@ public sealed class CityRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Update()
     {
-        var response = await _repository.Update(new CityDto(2, "Central City"));
+        var response = await _repository.UpdateAsync(new CityDto(2, "Central City"));
 
         response.Should().Be(Updated);
 
@@ -79,12 +79,12 @@ public sealed class CityRepositoryTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task Delete_Non_Existing() => (await _repository.Delete(42)).Should().Be(NotFound);
+    public async Task Delete_Non_Existing() => (await _repository.DeleteAsync(42)).Should().Be(NotFound);
 
     [Fact]
     public async Task Delete()
     {
-        var response = await _repository.Delete(2);
+        var response = await _repository.DeleteAsync(2);
 
         response.Should().Be(Deleted);
 
@@ -96,7 +96,7 @@ public sealed class CityRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Delete_Conflict()
     {
-        var response = await _repository.Delete(1);
+        var response = await _repository.DeleteAsync(1);
 
         response.Should().Be(Conflict);
 

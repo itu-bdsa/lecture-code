@@ -28,7 +28,7 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Create()
     {
-        var (response, created) = await _repository.Create(new PowerCreateDto("super speed"));
+        var (response, created) = await _repository.CreateAsync(new PowerCreateDto("super speed"));
 
         response.Should().Be(Created);
 
@@ -38,7 +38,7 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Create_Conflict()
     {
-        var (response, power) = await _repository.Create(new PowerCreateDto("invulnerability"));
+        var (response, power) = await _repository.CreateAsync(new PowerCreateDto("invulnerability"));
 
         response.Should().Be(Conflict);
 
@@ -46,21 +46,21 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task Find_Non_Existing() => (await _repository.Find(42)).Should().BeNull();
+    public async Task Find_Non_Existing() => (await _repository.FindAsync(42)).Should().BeNull();
 
     [Fact]
-    public async Task Find() => (await _repository.Find(2)).Should().Be(new PowerDto(2, "invulnerability"));
+    public async Task Find() => (await _repository.FindAsync(2)).Should().Be(new PowerDto(2, "invulnerability"));
 
     [Fact]
-    public async Task Read() => (await _repository.Read()).Should().BeEquivalentTo(new[] { new PowerDto(1, "flight"), new PowerDto(2, "invulnerability"), new PowerDto(3, "combat strategy") });
+    public async Task Read() => (await _repository.ReadAsync()).Should().BeEquivalentTo(new[] { new PowerDto(1, "flight"), new PowerDto(2, "invulnerability"), new PowerDto(3, "combat strategy") });
 
     [Fact]
-    public async Task Update_Non_Existing() => (await _repository.Update(new PowerDto(42, "brilliant deductive skill"))).Should().Be(NotFound);
+    public async Task Update_Non_Existing() => (await _repository.UpdateAsync(new PowerDto(42, "brilliant deductive skill"))).Should().Be(NotFound);
 
     [Fact]
     public async Task Update_Conflict()
     {
-        var response = await _repository.Update(new PowerDto(2, "flight"));
+        var response = await _repository.UpdateAsync(new PowerDto(2, "flight"));
 
         response.Should().Be(Conflict);
 
@@ -72,7 +72,7 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Update()
     {
-        var response = await _repository.Update(new PowerDto(2, "brilliant deductive skill"));
+        var response = await _repository.UpdateAsync(new PowerDto(2, "brilliant deductive skill"));
 
         response.Should().Be(Updated);
 
@@ -82,12 +82,12 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task Delete_Non_Existing() => (await _repository.Delete(42)).Should().Be(NotFound);
+    public async Task Delete_Non_Existing() => (await _repository.DeleteAsync(42)).Should().Be(NotFound);
 
     [Fact]
     public async Task Delete()
     {
-        var response = await _repository.Delete(3);
+        var response = await _repository.DeleteAsync(3);
 
         response.Should().Be(Deleted);
 
@@ -99,7 +99,7 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task Delete_Conflict()
     {
-        var response = await _repository.Delete(1);
+        var response = await _repository.DeleteAsync(1);
 
         response.Should().Be(Conflict);
 

@@ -1,16 +1,31 @@
 ﻿var factory = new ComicsContextFactory();
 using var context = factory.CreateDbContext(args);
+await context.Database.MigrateAsync();
 
-// var character = new Character
-// {
-//     GivenName = "Harleen",
-//     Surname = "Quinzel",
-//     AlterEgo = "Harley Quinn"
-// };
+if (args.Length > 0 && args[0] == "seed")
+{
+    Console.WriteLine("Resetting seed data");
 
-// context.Characters.Add(character);
-// context.SaveChanges();
+    await Seed.SeedAsync(context);
 
-var harley = context.Characters.Find(1);
+    var harleyQuinn = new CharacterCreateDto(
+        AlterEgo: "Harley Quinn",
+        GivenName: "Harleen",
+        Surname: "Quinzel",
+        FirstAppearance: 1992,
+        Occupation: "Former psychiatrist",
+        City: "Gotham City",
+        Gender: Female,
+        ImageUrl: "https://upload.wikimedia.org/wikipedia/en/a/ab/Harley_Quinn_Infobox.png",
+        Powers: new HashSet<string> { "complete unpredictability", "superhuman agility", "skilled fighter", "intelligence", "emotional manipulation", "immunity to toxins" }
+    );
 
-Console.WriteLine(harley);
+    var repository = new CharacterRepository(context);
+    await repository.CreateAsync(harleyQuinn);
+}
+
+var characters = await context.Characters.CountAsync();
+var cities = await context.Cities.CountAsync();
+var powers = await context.Powers.CountAsync();
+
+Console.WriteLine($"Database contains: {characters} characters, {cities} cities, and {powers} powers");
