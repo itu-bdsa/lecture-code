@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ComicsContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Comics")));
-builder.Services.AddTransient<ICityRepository, CityRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
 
 var app = builder.Build();
 
