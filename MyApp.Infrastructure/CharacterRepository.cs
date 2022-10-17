@@ -9,7 +9,7 @@ public sealed class CharacterRepository : ICharacterRepository
         _context = context;
     }
 
-    public async Task<(Status, CharacterDetailsDto)> CreateAsync(CharacterCreateDto character)
+    public async Task<CharacterDetailsDto> CreateAsync(CharacterCreateDto character)
     {
         var entity = new Character
         {
@@ -27,7 +27,7 @@ public sealed class CharacterRepository : ICharacterRepository
         _context.Characters.Add(entity);
         await _context.SaveChangesAsync();
 
-        return (Created, new CharacterDetailsDto(entity.Id, entity.AlterEgo, entity.GivenName, entity.Surname, entity.FirstAppearance, entity.Occupation, entity.City?.Name, entity.Gender, entity.ImageUrl, entity.Powers.Select(p => p.Name).ToHashSet()));
+        return new CharacterDetailsDto(entity.Id, entity.AlterEgo, entity.GivenName, entity.Surname, entity.FirstAppearance, entity.Occupation, entity.City?.Name, entity.Gender, entity.ImageUrl, entity.Powers.Select(p => p.Name).ToHashSet());
     }
 
     public async Task<CharacterDetailsDto?> FindAsync(int characterId)
@@ -40,7 +40,7 @@ public sealed class CharacterRepository : ICharacterRepository
         return await characters.FirstOrDefaultAsync();
     }
 
-    public async Task<IReadOnlyCollection<CharacterDto>> Read()
+    public async Task<IReadOnlyCollection<CharacterDto>> ReadAsync()
     {
         var characters = from c in _context.Characters
                          select new CharacterDto(c.Id, c.AlterEgo, c.GivenName, c.Surname);
@@ -56,8 +56,6 @@ public sealed class CharacterRepository : ICharacterRepository
         {
             return NotFound;
         }
-
-        var powers = CreateOrUpdatePowers(character.Powers);
 
         entity.AlterEgo = character.AlterEgo;
         entity.GivenName = character.GivenName;

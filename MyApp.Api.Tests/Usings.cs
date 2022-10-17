@@ -7,4 +7,5 @@ global using Microsoft.AspNetCore.Mvc;
 
 global using MyApp.Api.Controllers;
 global using MyApp.Core;
-global using MyApp.Infrastructure;
+
+global using static MyApp.Core.Gender;
