@@ -1,15 +1,15 @@
 namespace MyApp.Api.Tests;
 
-public class CitiesControllerTests
+public class PowersControllerTests
 {
-    private readonly ICityRepository _repository;
-    private readonly CitiesController _sut;
+    private readonly Mock<IPowerRepository> _repository;
+    private readonly PowersController _sut;
 
-    public CitiesControllerTests()
+    public PowersControllerTests()
     {
-        var logger = Substitute.For<ILogger<CitiesController>>();
-        _repository = Substitute.For<ICityRepository>();
-        _sut = new CitiesController(logger, _repository);
+        var logger = new Mock<ILogger<PowersController>>();
+        _repository = new Mock<IPowerRepository>();
+        _sut = new PowersController(logger.Object, _repository.Object);
     }
 
     [Fact]
@@ -18,20 +18,20 @@ public class CitiesControllerTests
     [Fact]
     public async Task Get_Existing()
     {
-        var city = new CityDto(3, "Central City");
-        _repository.FindAsync(3).Returns(city);
+        var power = new PowerDto(3, "invulnerability");
+        _repository.Setup(m => m.FindAsync(3)).ReturnsAsync(power);
 
         var response = await _sut.Get(3);
 
-        response.Value.Should().Be(city);
+        response.Value.Should().Be(power);
     }
 
     [Fact]
     public async Task Get_All()
     {
-        var cities = new CityDto[] { new(1, "Gotham City"), new(2, "Metropolis") };
+        var cities = new PowerDto[] { new(1, "super strength"), new(2, "flight") };
 
-        _repository.ReadAsync().Returns(cities);
+        _repository.Setup(m => m.ReadAsync()).ReturnsAsync(cities);
 
         var response = await _sut.Get();
 
@@ -41,26 +41,26 @@ public class CitiesControllerTests
     [Fact]
     public async Task Post_New()
     {
-        var create = new CityCreateDto("Metropolis");
-        var created = new CityDto(2, "Metropolis");
+        var create = new PowerCreateDto("super speed");
+        var created = new PowerDto(4, "super speed");
 
-        _repository.CreateAsync(create).Returns((Status.Created, created));
+        _repository.Setup(m => m.CreateAsync(create)).ReturnsAsync((Status.Created, created));
 
         var response = await _sut.Post(create);
         var result = response as CreatedAtActionResult;
 
-        result!.ActionName.Should().Be(nameof(CitiesController.Get));
-        result.RouteValues!.Single().Should().Be(new KeyValuePair<string, object>("id", 2));
+        result!.ActionName.Should().Be(nameof(PowersController.Get));
+        result.RouteValues!.Single().Should().Be(new KeyValuePair<string, object>("id", 4));
         result.Value.Should().Be(created);
     }
 
     [Fact]
     public async Task Post_Existing()
     {
-        var create = new CityCreateDto("Gotham City");
-        var existing = new CityDto(1, "Gotham City");
+        var create = new PowerCreateDto("super strength");
+        var existing = new PowerDto(1, "super strength");
 
-        _repository.CreateAsync(create).Returns((Status.Conflict, existing));
+        _repository.Setup(m => m.CreateAsync(create)).ReturnsAsync((Status.Conflict, existing));
 
         var response = await _sut.Post(create);
         var result = response as ConflictObjectResult;
@@ -71,9 +71,9 @@ public class CitiesControllerTests
     [Fact]
     public async Task Put_Existing()
     {
-        var update = new CityDto(1, "Gotham City");
+        var update = new PowerDto(1, "super strength");
 
-        _repository.UpdateAsync(update).Returns(Status.Updated);
+        _repository.Setup(m => m.UpdateAsync(update)).ReturnsAsync(Status.Updated);
 
         var response = await _sut.Put(1, update);
 
@@ -83,9 +83,9 @@ public class CitiesControllerTests
     [Fact]
     public async Task Put_Existing_Conflicting_Name()
     {
-        var update = new CityDto(1, "Metropolis");
+        var update = new PowerDto(1, "flight");
 
-        _repository.UpdateAsync(update).Returns(Status.Conflict);
+        _repository.Setup(m => m.UpdateAsync(update)).ReturnsAsync(Status.Conflict);
 
         var response = await _sut.Put(1, update);
 
@@ -95,9 +95,9 @@ public class CitiesControllerTests
     [Fact]
     public async Task Put_NonExisting()
     {
-        var update = new CityDto(42, "Smallville");
+        var update = new PowerDto(42, "superhuman weaponry");
 
-        _repository.UpdateAsync(update).Returns(Status.NotFound);
+        _repository.Setup(m => m.UpdateAsync(update)).ReturnsAsync(Status.NotFound);
 
         var response = await _sut.Put(42, update);
 
@@ -107,7 +107,7 @@ public class CitiesControllerTests
     [Fact]
     public async Task Delete_Existing()
     {
-        _repository.DeleteAsync(1).Returns(Status.Deleted);
+        _repository.Setup(m => m.DeleteAsync(1)).ReturnsAsync(Status.Deleted);
 
         var response = await _sut.Delete(1);
 
@@ -117,7 +117,7 @@ public class CitiesControllerTests
     [Fact]
     public async Task Delete_NonExisting()
     {
-        _repository.DeleteAsync(42).Returns(Status.NotFound);
+        _repository.Setup(m => m.DeleteAsync(42)).ReturnsAsync(Status.NotFound);
 
         var response = await _sut.Delete(42);
 
@@ -127,7 +127,7 @@ public class CitiesControllerTests
     [Fact]
     public async Task Delete_Existing_Conflict()
     {
-        _repository.DeleteAsync(2).Returns(Status.Conflict);
+        _repository.Setup(m => m.DeleteAsync(2)).ReturnsAsync(Status.Conflict);
 
         var response = await _sut.Delete(2);
 
