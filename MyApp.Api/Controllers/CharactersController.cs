@@ -18,42 +18,17 @@ public class CharactersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<CharacterDto>> Get() => await _repository.ReadAsync();
+    public async Task<IEnumerable<CharacterDto>> Get() => throw new NotImplementedException();
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CharacterDto>> Get(int id)
-    {
-        var character = await _repository.FindAsync(id);
-
-        if (character is null)
-        {
-            return NotFound();
-        }
-
-        return character;
-    }
+    public async Task<ActionResult<CharacterDto>> Get(int id) => throw new NotImplementedException();
 
     [HttpPost]
-    public async Task<IActionResult> Post(CharacterCreateDto character)
-    {
-        var created = await _repository.CreateAsync(character);
-
-        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
-    }
+    public async Task<IActionResult> Post(CharacterCreateDto character) => throw new NotImplementedException();
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, CharacterUpdateDto character)
-    {
-        var result = await _repository.UpdateAsync(character);
-
-        return result == Status.Updated ? NoContent() : NotFound();
-    }
+    public async Task<IActionResult> Put(int id, CharacterUpdateDto character) => throw new NotImplementedException();
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var result = await _repository.DeleteAsync(id);
-
-        return result == Status.Deleted ? NoContent() : NotFound();
-    }
+    public async Task<IActionResult> Delete(int id) => throw new NotImplementedException();
 }
