@@ -5,38 +5,38 @@ namespace MyApp.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CitiesController : ControllerBase
+public class PowersController : ControllerBase
 {
-    private readonly ILogger<CitiesController> _logger;
+    private readonly ILogger<PowersController> _logger;
 
-    private readonly ICityRepository _repository;
+    private readonly IPowerRepository _repository;
 
-    public CitiesController(ILogger<CitiesController> logger, ICityRepository repository)
+    public PowersController(ILogger<PowersController> logger, IPowerRepository repository)
     {
         _logger = logger;
         _repository = repository;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<CityDto>> Get() => await _repository.ReadAsync();
+    public async Task<IEnumerable<PowerDto>> Get() => await _repository.ReadAsync();
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CityDto>> Get(int id)
+    public async Task<ActionResult<PowerDto>> Get(int id)
     {
-        var city = await _repository.FindAsync(id);
+        var power = await _repository.FindAsync(id);
 
-        if (city is null)
+        if (power is null)
         {
             return NotFound();
         }
 
-        return city;
+        return power;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(CityCreateDto city)
+    public async Task<IActionResult> Post(PowerCreateDto power)
     {
-        var (status, created) = await _repository.CreateAsync(city);
+        var (status, created) = await _repository.CreateAsync(power);
 
         if (status == Status.Created)
         {
@@ -47,9 +47,9 @@ public class CitiesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, CityDto city)
+    public async Task<IActionResult> Put(int id, PowerDto power)
     {
-        var result = await _repository.UpdateAsync(city);
+        var result = await _repository.UpdateAsync(power);
 
         return result switch
         {

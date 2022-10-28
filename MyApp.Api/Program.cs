@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ComicsContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Comics")));
 builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 
