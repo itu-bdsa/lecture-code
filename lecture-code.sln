@@ -29,9 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Core.Tests", "MyApp.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncAndParallel", "AsyncAndParallel\AsyncAndParallel.csproj", "{730D2B09-3807-4B13-AD32-A87333561B48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Api", "MyApp.Api\MyApp.Api.csproj", "{3C652C3C-EF6D-451A-9737-4369A9734B38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Api", "MyApp.Api\MyApp.Api.csproj", "{3C652C3C-EF6D-451A-9737-4369A9734B38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.Api.Tests", "MyApp.Api.Tests\MyApp.Api.Tests.csproj", "{914FC979-6F13-4C61-995D-3303C19A913D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Api.Tests", "MyApp.Api.Tests\MyApp.Api.Tests.csproj", "{914FC979-6F13-4C61-995D-3303C19A913D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.ApiMinimal", "MyApp.ApiMinimal\MyApp.ApiMinimal.csproj", "{403A91CB-885B-4E9F-9233-C823699434A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{914FC979-6F13-4C61-995D-3303C19A913D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{914FC979-6F13-4C61-995D-3303C19A913D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{914FC979-6F13-4C61-995D-3303C19A913D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{403A91CB-885B-4E9F-9233-C823699434A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{403A91CB-885B-4E9F-9233-C823699434A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{403A91CB-885B-4E9F-9233-C823699434A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{403A91CB-885B-4E9F-9233-C823699434A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

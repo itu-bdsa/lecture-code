@@ -19,6 +19,7 @@ public class CitiesControllerTests
     public async Task Get_Existing()
     {
         var city = new CityDto(3, "Central City");
+
         _repository.FindAsync(3).Returns(city);
 
         var response = await _sut.Get(3);
