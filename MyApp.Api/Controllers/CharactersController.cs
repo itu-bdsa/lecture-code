@@ -21,7 +21,7 @@ public class CharactersController : ControllerBase
     public async Task<IEnumerable<CharacterDto>> Get() => throw new NotImplementedException();
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CharacterDto>> Get(int id) => throw new NotImplementedException();
+    public async Task<ActionResult<CharacterDetailsDto>> Get(int id) => throw new NotImplementedException();
 
     [HttpPost]
     public async Task<IActionResult> Post(CharacterCreateDto character) => throw new NotImplementedException();
@@ -30,5 +30,10 @@ public class CharactersController : ControllerBase
     public async Task<IActionResult> Put(int id, CharacterUpdateDto character) => throw new NotImplementedException();
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id) => throw new NotImplementedException();
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _repository.DeleteAsync(id);
+
+        return result == Status.NotFound ? NotFound() : NoContent();
+    }
 }
