@@ -16,6 +16,8 @@ public static class Seed
 
         context.Cities.AddRange(metropolis, gothamCity, themyscira);
 
+        await context.SaveChangesAsync();
+
         var superStrength = new Power("super strength");
         var flight = new Power("flight");
         var invulnerability = new Power("invulnerability");
@@ -36,6 +38,8 @@ public static class Seed
         var gymnasticAbility = new Power("gymnastic ability");
 
         context.Powers.AddRange(superStrength, flight, invulnerability, superSpeed, heatVision, freezeBreath, xRayVision, superhumanHearing, healingFactor, exceptionalMartialArtist, combatStrategy, inexhaustibleWealth, brilliantDeductiveSkill, advancedTechnology, combatSkill, superhumanAgility, magicWeaponry, gymnasticAbility);
+
+        await context.SaveChangesAsync();
 
         context.Characters.AddRange(
             new Character { GivenName = "Clark", Surname = "Kent", AlterEgo = "Superman", Occupation = "Reporter", City = metropolis, Gender = Male, FirstAppearance = 1938, ImageUrl = "https://upload.wikimedia.org/wikipedia/en/3/35/Supermanflying.png", Powers = new[] { superStrength, flight, invulnerability, superSpeed, heatVision, freezeBreath, xRayVision, superhumanHearing, healingFactor } },
