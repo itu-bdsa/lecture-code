@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>MyApp.Server-28AD0C32-71B2-4608-AB14-9C7893CCA325</UserSecretsId>
+    <UserSecretsId>cf6cb7ba-b845-4518-b29b-f79426dda2aa</UserSecretsId>
     <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
   </PropertyGroup>
 
@@ -21,8 +21,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.10" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.16.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.5" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.5" />
   </ItemGroup>
 
 </Project>
