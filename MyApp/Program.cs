@@ -8,20 +8,20 @@ if (args.Length > 0 && args[0] == "seed")
 
     await Seed.SeedAsync(context);
 
-    var harleyQuinn = new CharacterCreateDto(
-        AlterEgo: "Harley Quinn",
-        GivenName: "Harleen",
-        Surname: "Quinzel",
-        FirstAppearance: 1992,
-        Occupation: "Former psychiatrist",
+    var riddler = new CharacterCreateDto(
+        AlterEgo: "Riddler",
+        GivenName: "Edward",
+        Surname: "Nygma",
+        FirstAppearance: 1948,
+        Occupation: "Professional criminal",
         City: "Gotham City",
-        Gender: Female,
-        ImageUrl: "https://upload.wikimedia.org/wikipedia/en/a/ab/Harley_Quinn_Infobox.png",
-        Powers: new HashSet<string> { "complete unpredictability", "superhuman agility", "skilled fighter", "intelligence", "emotional manipulation", "immunity to toxins" }
+        Gender: Male,
+        ImageUrl: "https://upload.wikimedia.org/wikipedia/en/6/68/Riddler.png",
+        Powers: new HashSet<string> { "genius-level intellect" }
     );
 
     var repository = new CharacterRepository(context);
-    await repository.CreateAsync(harleyQuinn);
+    await repository.CreateAsync(riddler);
 }
 
 var characters = await context.Characters.CountAsync();
