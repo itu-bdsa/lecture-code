@@ -42,10 +42,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+app.MapGet("/powers", async (IPowerRepository repository) => await repository.ReadAsync());
+app.MapGet("/powers/{id}", async (IPowerRepository repository, int id) => await repository.FindAsync(id));
+app.MapPost("/powers", async (IPowerRepository repository, int id, PowerCreateDto power) => await repository.CreateAsync(power));
+app.MapPut("/powers/{id}", async (IPowerRepository repository, int id, PowerDto power) => await repository.UpdateAsync(power));
+app.MapDelete("/powers/{id}", async (IPowerRepository repository, int id) => await repository.DeleteAsync(id));
 
 app.Run();
 

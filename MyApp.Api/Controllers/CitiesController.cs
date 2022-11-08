@@ -1,42 +1,42 @@
 using Microsoft.AspNetCore.Mvc;
 using MyApp.Core;
 
-namespace MyApp.Server.Controllers;
+namespace MyApp.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class PowersController : ControllerBase
+[Route("[controller]")]
+public class CitiesController : ControllerBase
 {
-    private readonly ILogger<PowersController> _logger;
+    private readonly ILogger<CitiesController> _logger;
 
-    private readonly IPowerRepository _repository;
+    private readonly ICityRepository _repository;
 
-    public PowersController(ILogger<PowersController> logger, IPowerRepository repository)
+    public CitiesController(ILogger<CitiesController> logger, ICityRepository repository)
     {
         _logger = logger;
         _repository = repository;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<PowerDto>> Get() => await _repository.ReadAsync();
+    public async Task<IEnumerable<CityDto>> Get() => await _repository.ReadAsync();
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<PowerDto>> Get(int id)
+    public async Task<ActionResult<CityDto>> Get(int id)
     {
-        var power = await _repository.FindAsync(id);
+        var city = await _repository.FindAsync(id);
 
-        if (power is null)
+        if (city is null)
         {
             return NotFound();
         }
 
-        return power;
+        return city;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(PowerCreateDto power)
+    public async Task<IActionResult> Post(CityCreateDto city)
     {
-        var (status, created) = await _repository.CreateAsync(power);
+        var (status, created) = await _repository.CreateAsync(city);
 
         if (status == Status.Created)
         {
@@ -47,9 +47,9 @@ public class PowersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, PowerDto power)
+    public async Task<IActionResult> Put(int id, CityDto city)
     {
-        var result = await _repository.UpdateAsync(power);
+        var result = await _repository.UpdateAsync(city);
 
         return result switch
         {

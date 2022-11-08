@@ -1,4 +1,4 @@
-namespace MyApp.Server.Tests;
+namespace MyApp.Api.Tests;
 
 public class CharactersControllerTests
 {

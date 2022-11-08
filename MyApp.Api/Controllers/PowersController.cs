@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using MyApp.Core;
 
-namespace MyApp.Server.Controllers;
+namespace MyApp.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class PowersController : ControllerBase
 {
     private readonly ILogger<PowersController> _logger;

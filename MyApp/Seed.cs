@@ -15,7 +15,6 @@ public static class Seed
         var themyscira = new City("Themyscira");
 
         context.Cities.AddRange(metropolis, gothamCity, themyscira);
-
         await context.SaveChangesAsync();
 
         var superStrength = new Power("super strength");
@@ -38,7 +37,6 @@ public static class Seed
         var gymnasticAbility = new Power("gymnastic ability");
 
         context.Powers.AddRange(superStrength, flight, invulnerability, superSpeed, heatVision, freezeBreath, xRayVision, superhumanHearing, healingFactor, exceptionalMartialArtist, combatStrategy, inexhaustibleWealth, brilliantDeductiveSkill, advancedTechnology, combatSkill, superhumanAgility, magicWeaponry, gymnasticAbility);
-
         await context.SaveChangesAsync();
 
         context.Characters.AddRange(
@@ -47,7 +45,6 @@ public static class Seed
             new Character { GivenName = "Diana", Surname = "Prince", AlterEgo = "Wonder Woman", Occupation = "Amazon Princess", City = themyscira, Gender = Female, FirstAppearance = 1941, ImageUrl = "https://upload.wikimedia.org/wikipedia/en/9/93/Wonder_Woman.jpg", Powers = new[] { superStrength, invulnerability, flight, combatSkill, combatStrategy, superhumanAgility, healingFactor, magicWeaponry } },
             new Character { GivenName = "Selina", Surname = "Kyle", AlterEgo = "Catwoman", Occupation = "Thief", City = gothamCity, Gender = Female, FirstAppearance = 1940, ImageUrl = "https://upload.wikimedia.org/wikipedia/en/e/e4/Catwoman_Infobox.jpg", Powers = new[] { exceptionalMartialArtist, gymnasticAbility, combatSkill } }
         );
-
         await context.SaveChangesAsync();
     }
 }
