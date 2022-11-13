@@ -89,10 +89,10 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
 
         var created = result.Result as Created<Character>;
 
-        created!.Value.Should().BeEquivalentTo(character with { Id = 4 });
-        created.Location.Should().Be("/cities/4");
+        created!.Value.Should().BeEquivalentTo(character with { Id = 3 });
+        created.Location.Should().Be("3");
 
-        (await _repository.FindAsync(3)).Should().BeEquivalentTo(character with { Id = 4 });
+        ((await _repository.FindAsync(3)).Result as Ok<Character>)!.Value.Should().BeEquivalentTo(character with { Id = 3 });
     }
 
     [Fact]
@@ -112,6 +112,7 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
     {
         var expected = new Character
         {
+            Id = 2,
             AlterEgo = "Catwoman",
             GivenName = "Selina",
             Surname = "Kyle",
@@ -180,7 +181,7 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
 
         result.Result.Should().BeOfType<NoContent>();
 
-        (await _repository.FindAsync(1)).Should().BeEquivalentTo(character);
+        ((await _repository.FindAsync(1)).Result as Ok<Character>)!.Value.Should().BeEquivalentTo(character);
     }
 
     [Fact]
@@ -190,7 +191,9 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
 
         var result = await _repository.UpdateAsync(42, character);
 
-        result.Result.Should().BeOfType<NotFound>();
+        var notFound = result.Result as NotFound<int>;
+
+        notFound!.Value.Should().Be(42);
     }
 
     [Fact]
@@ -208,7 +211,9 @@ public sealed class CharacterRepositoryTests : IAsyncDisposable
     {
         var result = await _repository.DeleteAsync(42);
 
-        result.Result.Should().BeOfType<NotFound>();
+        var notFound = result.Result as NotFound<int>;
+
+        notFound!.Value.Should().Be(42);
     }
 
     public async ValueTask DisposeAsync()

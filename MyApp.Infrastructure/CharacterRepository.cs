@@ -35,12 +35,13 @@ public sealed class CharacterRepository : ICharacterRepository
         _context.Characters.Add(entity);
         await _context.SaveChangesAsync();
 
-        return TypedResults.Created($"/characters/{entity.Id}", character with { Id = entity.Id });
+        return TypedResults.Created($"{entity.Id}", character with { Id = entity.Id });
     }
 
     public async Task<Results<Ok<Character>, NotFound<int>>> FindAsync(int id)
     {
         var characters = from c in _context.Characters
+                         where c.Id == id
                          select new Character
                          {
                              Id = c.Id,
@@ -63,6 +64,7 @@ public sealed class CharacterRepository : ICharacterRepository
     public async Task<IReadOnlyCollection<BasicCharacter>> ReadAsync()
     {
         var characters = from c in _context.Characters
+                         orderby c.AlterEgo, c.GivenName, c.Surname
                          select new BasicCharacter
                          {
                              Id = c.Id,

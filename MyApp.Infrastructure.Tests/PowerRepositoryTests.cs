@@ -33,7 +33,7 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
         var created = result.Result as Created<Power>;
 
         created!.Value.Should().Be(new Power { Id = 4, Name = "super speed" });
-        created.Location.Should().Be("/powers/4");
+        created.Location.Should().Be("4");
 
         var entity = await _context.Powers.FindAsync(4);
         entity!.Name.Should().Be("super speed");

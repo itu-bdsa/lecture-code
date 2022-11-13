@@ -36,4 +36,4 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Test
-        run: dotnet test --filter FullyQualifiedName!~MyApp.Integration.Tests --configuration Release
+        run: dotnet test --filter FullyQualifiedName!~MyApp.MinimalApi.Integration.Tests --configuration Release

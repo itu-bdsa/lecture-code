@@ -4,8 +4,10 @@
 
 namespace MyApp.Infrastructure.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialMigration : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -46,7 +48,7 @@ namespace MyApp.Infrastructure.Migrations
                     FirstAppearance = table.Column<short>(type: "smallint", nullable: true),
                     Occupation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CityId = table.Column<int>(type: "int", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
@@ -60,7 +62,7 @@ namespace MyApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterPower",
+                name: "CharacterEntityPowerEntity",
                 columns: table => new
                 {
                     CharactersId = table.Column<int>(type: "int", nullable: false),
@@ -68,15 +70,15 @@ namespace MyApp.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterPower", x => new { x.CharactersId, x.PowersId });
+                    table.PrimaryKey("PK_CharacterEntityPowerEntity", x => new { x.CharactersId, x.PowersId });
                     table.ForeignKey(
-                        name: "FK_CharacterPower_Characters_CharactersId",
+                        name: "FK_CharacterEntityPowerEntity_Characters_CharactersId",
                         column: x => x.CharactersId,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CharacterPower_Powers_PowersId",
+                        name: "FK_CharacterEntityPowerEntity_Powers_PowersId",
                         column: x => x.PowersId,
                         principalTable: "Powers",
                         principalColumn: "Id",
@@ -84,8 +86,8 @@ namespace MyApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CharacterPower_PowersId",
-                table: "CharacterPower",
+                name: "IX_CharacterEntityPowerEntity_PowersId",
+                table: "CharacterEntityPowerEntity",
                 column: "PowersId");
 
             migrationBuilder.CreateIndex(
@@ -106,10 +108,11 @@ namespace MyApp.Infrastructure.Migrations
                 unique: true);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CharacterPower");
+                name: "CharacterEntityPowerEntity");
 
             migrationBuilder.DropTable(
                 name: "Characters");

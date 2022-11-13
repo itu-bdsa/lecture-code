@@ -28,7 +28,7 @@ public sealed class CityRepository : ICityRepository
             _context.Cities.Add(entity);
             await _context.SaveChangesAsync();
 
-            return TypedResults.Created($"/cities/{entity.Id}", city with { Id = entity.Id });
+            return TypedResults.Created($"{entity.Id}", city with { Id = entity.Id });
         }
         else
         {

@@ -33,7 +33,7 @@ public sealed class CityRepositoryTests : IAsyncDisposable
         var created = result.Result as Created<City>;
 
         created!.Value.Should().Be(new City { Id = 4, Name = "Central City" });
-        created.Location.Should().Be("/cities/4");
+        created.Location.Should().Be("4");
 
         var entity = await _context.Cities.FindAsync(4);
         entity!.Name.Should().Be("Central City");

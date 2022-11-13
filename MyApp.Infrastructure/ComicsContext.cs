@@ -17,7 +17,7 @@ public sealed class ComicsContext : DbContext
                     .HasIndex(c => c.Name).IsUnique();
 
         modelBuilder.Entity<CityEntity>()
-            .ToTable("Cities");
+                    .ToTable("Cities");
 
         modelBuilder.Entity<CityEntity>().Property(c => c.Name)
                     .HasMaxLength(50);
@@ -58,6 +58,5 @@ public sealed class ComicsContext : DbContext
         modelBuilder.Entity<CharacterEntity>()
                     .Property(c => c.ImageUrl)
                     .HasMaxLength(250);
-
     }
 }

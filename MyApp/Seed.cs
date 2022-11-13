@@ -9,6 +9,7 @@ public static class Seed
         await context.Database.ExecuteSqlRawAsync("DELETE FROM dbo.Powers");
         await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Characters', RESEED, 0)");
         await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Cities', RESEED, 0)");
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Powers', RESEED, 0)");
 
         var metropolis = new CityEntity { Name = "Metropolis" };
         var gothamCity = new CityEntity { Name = "Gotham City" };

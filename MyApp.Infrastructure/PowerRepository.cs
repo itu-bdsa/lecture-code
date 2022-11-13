@@ -28,7 +28,7 @@ public sealed class PowerRepository : IPowerRepository
             _context.Powers.Add(entity);
             await _context.SaveChangesAsync();
 
-            return TypedResults.Created($"/powers/{entity.Id}", power with { Id = entity.Id });
+            return TypedResults.Created($"{entity.Id}", power with { Id = entity.Id });
         }
         else
         {
