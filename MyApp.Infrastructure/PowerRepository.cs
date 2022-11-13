@@ -3,98 +3,110 @@ namespace MyApp.Infrastructure;
 public sealed class PowerRepository : IPowerRepository
 {
     private readonly ComicsContext _context;
+    private readonly PowerValidator _validator;
 
-    public PowerRepository(ComicsContext context)
+    public PowerRepository(ComicsContext context, PowerValidator validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<(Status, PowerDto)> CreateAsync(PowerCreateDto power)
+    public async Task<Results<Created<Power>, ValidationProblem, Conflict<Power>>> CreateAsync(Power power)
     {
+        var validation = _validator.Validate(power);
+
+        if (!validation.IsValid)
+        {
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+        }
+
         var entity = await _context.Powers.FirstOrDefaultAsync(c => c.Name == power.Name);
-        Status status;
 
         if (entity is null)
         {
-            entity = new Power(power.Name);
-
+            entity = new PowerEntity { Name = power.Name };
             _context.Powers.Add(entity);
             await _context.SaveChangesAsync();
 
-            status = Created;
+            return TypedResults.Created($"/powers/{entity.Id}", power with { Id = entity.Id });
         }
         else
         {
-            status = Conflict;
+            var existing = new Power { Id = entity.Id, Name = entity.Name };
+
+            return TypedResults.Conflict(existing);
+        }
+    }
+
+    public async Task<Results<Ok<Power>, NotFound<int>>> FindAsync(int id)
+    {
+        var powers = from c in _context.Powers
+                     where c.Id == id
+                     select new Power { Id = c.Id, Name = c.Name };
+
+        var power = await powers.FirstOrDefaultAsync();
+
+        return power is null ? TypedResults.NotFound(id) : TypedResults.Ok(power);
+    }
+
+    public async Task<IReadOnlyCollection<Power>> ReadAsync()
+    {
+        var powers = from c in _context.Powers
+                     orderby c.Name
+                     select new Power { Id = c.Id, Name = c.Name };
+
+        return await powers.ToArrayAsync();
+    }
+
+    public async Task<Results<NoContent, ValidationProblem, NotFound<int>, Conflict<Power>>> UpdateAsync(int id, Power power)
+    {
+        var validation = _validator.Validate(power);
+
+        if (!validation.IsValid)
+        {
+            return TypedResults.ValidationProblem(validation.ToDictionary());
         }
 
-        var created = new PowerDto(entity.Id, entity.Name);
-
-        return (status, created);
-    }
-
-    public async Task<PowerDto?> FindAsync(int powerId)
-    {
-        var cities = from c in _context.Powers
-                     where c.Id == powerId
-                     select new PowerDto(c.Id, c.Name);
-
-        return await cities.FirstOrDefaultAsync();
-    }
-
-    public async Task<IReadOnlyCollection<PowerDto>> ReadAsync()
-    {
-        var cities = from c in _context.Powers
-                     orderby c.Name
-                     select new PowerDto(c.Id, c.Name);
-
-        return await cities.ToArrayAsync();
-    }
-
-    public async Task<Status> UpdateAsync(PowerDto power)
-    {
-        var entity = await _context.Powers.FindAsync(power.Id);
-        Status status;
+        var entity = await _context.Powers.FindAsync(id);
 
         if (entity is null)
         {
-            status = NotFound;
+            return TypedResults.NotFound(id);
         }
-        else if (await _context.Powers.FirstOrDefaultAsync(c => c.Id != power.Id && c.Name == power.Name) != null)
+
+        var existing = await _context.Powers.FirstOrDefaultAsync(c => c.Id != power.Id && c.Name == power.Name);
+
+        if (existing != null)
         {
-            status = Conflict;
+            return TypedResults.Conflict(new Power { Id = existing.Id, Name = existing.Name });
         }
         else
         {
             entity.Name = power.Name;
             await _context.SaveChangesAsync();
-            status = Updated;
-        }
 
-        return status;
+            return TypedResults.NoContent();
+        }
     }
 
-    public async Task<Status> DeleteAsync(int powerId)
+    public async Task<Results<NoContent, NotFound<int>, Conflict<Power>>> DeleteAsync(int id)
     {
-        var power = await _context.Powers.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == powerId);
-        Status status;
+        var power = await _context.Powers.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == id);
 
         if (power is null)
         {
-            status = NotFound;
+            return TypedResults.NotFound(id);
         }
         else if (power.Characters.Any())
         {
-            status = Conflict;
+            return TypedResults.Conflict(new Power { Id = power.Id, Name = power.Name });
         }
         else
         {
             _context.Powers.Remove(power);
             await _context.SaveChangesAsync();
 
-            status = Deleted;
+            return TypedResults.NoContent();
         }
-
-        return status;
     }
 }
