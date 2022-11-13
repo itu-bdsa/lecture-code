@@ -14,67 +14,89 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
         builder.UseSqlite(_connection);
         var context = new ComicsContext(builder.Options);
         context.Database.EnsureCreated();
-        var flight = new Power("flight") { Id = 1 };
-        var invulnerability = new Power("invulnerability") { Id = 2 };
-        var combatStrategy = new Power("combat strategy") { Id = 3 };
+        var flight = new PowerEntity { Id = 1, Name = "flight" };
+        var invulnerability = new PowerEntity { Id = 2, Name = "invulnerability" };
+        var combatStrategy = new PowerEntity { Id = 3, Name = "combat strategy" };
         context.Powers.AddRange(flight, invulnerability, combatStrategy);
-        context.Characters.Add(new Character { Id = 1, AlterEgo = "Superman", Powers = new[] { flight, invulnerability } });
+        context.Characters.Add(new CharacterEntity { Id = 1, AlterEgo = "Superman", Powers = new[] { flight, invulnerability } });
         context.SaveChanges();
 
         _context = context;
-        _repository = new PowerRepository(_context);
+        _repository = new PowerRepository(_context, new PowerValidator());
     }
 
     [Fact]
     public async Task CreateAsync()
     {
-        var (response, created) = await _repository.CreateAsync(new PowerCreateDto("super speed"));
+        var result = await _repository.CreateAsync(new Power { Name = "super speed" });
 
-        response.Should().Be(Created);
+        var created = result.Result as Created<Power>;
 
-        created.Should().Be(new PowerDto(4, "super speed"));
+        created!.Value.Should().Be(new Power { Id = 4, Name = "super speed" });
+        created.Location.Should().Be("4");
+
+        var entity = await _context.Powers.FindAsync(4);
+        entity!.Name.Should().Be("super speed");
     }
 
     [Fact]
     public async Task CreateAsync_Conflict()
     {
-        var (response, power) = await _repository.CreateAsync(new PowerCreateDto("invulnerability"));
+        var result = await _repository.CreateAsync(new Power { Name = "invulnerability" });
 
-        response.Should().Be(Conflict);
+        var conflict = result.Result as Conflict<Power>;
 
-        power.Should().Be(new PowerDto(2, "invulnerability"));
+        conflict!.Value.Should().Be(new Power { Id = 2, Name = "invulnerability" });
     }
 
     [Fact]
-    public async Task FindAsync_Non_Existing() => (await _repository.FindAsync(42)).Should().BeNull();
-
-    [Fact]
-    public async Task FindAsync() => (await _repository.FindAsync(2)).Should().Be(new PowerDto(2, "invulnerability"));
-
-    [Fact]
-    public async Task ReadAsync() => (await _repository.ReadAsync()).Should().BeEquivalentTo(new[] { new PowerDto(1, "flight"), new PowerDto(2, "invulnerability"), new PowerDto(3, "combat strategy") });
-
-    [Fact]
-    public async Task UpdateAsync_Non_Existing() => (await _repository.UpdateAsync(new PowerDto(42, "brilliant deductive skill"))).Should().Be(NotFound);
-
-    [Fact]
-    public async Task UpdateAsync_Conflict()
+    public async Task CreateAsync_ValidationProblem()
     {
-        var response = await _repository.UpdateAsync(new PowerDto(2, "flight"));
+        var result = await _repository.CreateAsync(new Power { Name = string.Empty });
 
-        response.Should().Be(Conflict);
+        var validationProblem = result.Result as ValidationProblem;
 
-        var entity = _context.Powers.Find(2)!;
+        validationProblem!.ProblemDetails.Errors.Should().HaveCount(1);
+    }
 
-        entity.Name.Should().Be("invulnerability");
+    [Fact]
+    public async Task FindAsync_NotFound()
+    {
+        var result = await _repository.FindAsync(42);
+
+        var notFound = result.Result as NotFound<int>;
+
+        notFound!.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public async Task FindAsync()
+    {
+        var result = await _repository.FindAsync(2);
+
+        var ok = result.Result as Ok<Power>;
+
+        ok!.Value.Should().Be(new Power { Id = 2, Name = "invulnerability" });
+    }
+
+    [Fact]
+    public async Task ReadAsync()
+    {
+        var powers = await _repository.ReadAsync();
+
+        powers.Should().BeEquivalentTo(new[] {
+            new Power { Id = 1, Name = "flight" },
+            new Power { Id = 2, Name = "invulnerability" },
+            new Power { Id = 3, Name = "combat strategy" }
+        });
     }
 
     [Fact]
     public async Task UpdateAsync()
     {
-        var response = await _repository.UpdateAsync(new PowerDto(2, "brilliant deductive skill"));
+        var result = await _repository.UpdateAsync(2, new Power { Id = 2, Name = "brilliant deductive skill" });
 
-        response.Should().Be(Updated);
+        result.Result.Should().BeOfType<NoContent>();
 
         var entity = await _context.Powers.FindAsync(2)!;
 
@@ -82,14 +104,55 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task DeleteAsync_Non_Existing() => (await _repository.DeleteAsync(42)).Should().Be(NotFound);
+    public async Task UpdateAsync_NotFound()
+    {
+        var result = await _repository.UpdateAsync(42, new Power { Id = 42, Name = "brilliant deductive skill" });
+
+        var notFound = result.Result as NotFound<int>;
+
+        notFound!.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_Conflict()
+    {
+        var result = await _repository.UpdateAsync(2, new Power { Id = 2, Name = "flight" });
+
+        var conflict = result.Result as Conflict<Power>;
+
+        conflict!.Value.Should().Be(new Power { Id = 1, Name = "flight" });
+
+        var entity = _context.Powers.Find(2)!;
+
+        entity.Name.Should().Be("invulnerability");
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ValidationProblem()
+    {
+        var result = await _repository.UpdateAsync(2, new Power { Id = 2, Name = string.Empty });
+
+        var validationProblem = result.Result as ValidationProblem;
+
+        validationProblem!.ProblemDetails.Errors.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_NotFound()
+    {
+        var result = await _repository.DeleteAsync(42);
+
+        var notFound = result.Result as NotFound<int>;
+
+        notFound!.Value.Should().Be(42);
+    }
 
     [Fact]
     public async Task DeleteAsync()
     {
-        var response = await _repository.DeleteAsync(3);
+        var result = await _repository.DeleteAsync(3);
 
-        response.Should().Be(Deleted);
+        result.Result.Should().BeOfType<NoContent>();
 
         var entity = await _context.Powers.FindAsync(3);
 
@@ -99,9 +162,11 @@ public sealed class PowerRepositoryTests : IAsyncDisposable
     [Fact]
     public async Task DeleteAsync_Conflict()
     {
-        var response = await _repository.DeleteAsync(1);
+        var result = await _repository.DeleteAsync(1);
 
-        response.Should().Be(Conflict);
+        var conflict = result.Result as Conflict<Power>;
+
+        conflict!.Value.Should().Be(new Power { Id = 1, Name = "flight" });
 
         (await _context.Powers.FindAsync(1)).Should().NotBeNull();
     }

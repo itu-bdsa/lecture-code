@@ -3,15 +3,24 @@ namespace MyApp.Infrastructure;
 public sealed class CharacterRepository : ICharacterRepository
 {
     private readonly ComicsContext _context;
+    private readonly CharacterValidator _validator;
 
-    public CharacterRepository(ComicsContext context)
+    public CharacterRepository(ComicsContext context, CharacterValidator validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<CharacterDetailsDto> CreateAsync(CharacterCreateDto character)
+    public async Task<Results<Created<Character>, ValidationProblem>> CreateAsync(Character character)
     {
-        var entity = new Character
+        var validation = _validator.Validate(character);
+
+        if (!validation.IsValid)
+        {
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+        }
+
+        var entity = new CharacterEntity
         {
             AlterEgo = character.AlterEgo,
             GivenName = character.GivenName,
@@ -23,38 +32,57 @@ public sealed class CharacterRepository : ICharacterRepository
             ImageUrl = character.ImageUrl,
             Powers = await CreateOrUpdatePowers(character.Powers).ToHashSetAsync()
         };
-
         _context.Characters.Add(entity);
         await _context.SaveChangesAsync();
 
-        return new CharacterDetailsDto(entity.Id, entity.AlterEgo, entity.GivenName, entity.Surname, entity.FirstAppearance, entity.Occupation, entity.City?.Name, entity.Gender, entity.ImageUrl, entity.Powers.Select(p => p.Name).ToHashSet());
+        return TypedResults.Created($"{entity.Id}", character with { Id = entity.Id });
     }
 
-    public async Task<CharacterDetailsDto?> FindAsync(int characterId)
+    public async Task<Results<Ok<Character>, NotFound<int>>> FindAsync(int id)
     {
         var characters = from c in _context.Characters
-                         let powers = c.Powers.Select(p => p.Name).ToHashSet()
-                         where c.Id == characterId
-                         select new CharacterDetailsDto(c.Id, c.AlterEgo, c.GivenName, c.Surname, c.FirstAppearance, c.Occupation, c.City == null ? null : c.City.Name, c.Gender, c.ImageUrl, powers);
+                         where c.Id == id
+                         select new Character
+                         {
+                             Id = c.Id,
+                             AlterEgo = c.AlterEgo,
+                             GivenName = c.GivenName,
+                             Surname = c.Surname,
+                             FirstAppearance = c.FirstAppearance,
+                             Occupation = c.Occupation,
+                             Gender = c.Gender,
+                             City = c.City!.Name,
+                             ImageUrl = c.ImageUrl,
+                             Powers = c.Powers.Select(p => p.Name).ToHashSet()
+                         };
 
-        return await characters.FirstOrDefaultAsync();
+        var character = await characters.FirstOrDefaultAsync();
+
+        return character is null ? TypedResults.NotFound(id) : TypedResults.Ok(character);
     }
 
-    public async Task<IReadOnlyCollection<CharacterDto>> ReadAsync()
+    public async Task<IReadOnlyCollection<BasicCharacter>> ReadAsync()
     {
         var characters = from c in _context.Characters
-                         select new CharacterDto(c.Id, c.AlterEgo, c.GivenName, c.Surname);
+                         orderby c.AlterEgo, c.GivenName, c.Surname
+                         select new BasicCharacter
+                         {
+                             Id = c.Id,
+                             AlterEgo = c.AlterEgo,
+                             GivenName = c.GivenName,
+                             Surname = c.Surname
+                         };
 
         return await characters.ToListAsync();
     }
 
-    public async Task<Status> UpdateAsync(CharacterUpdateDto character)
+    public async Task<Results<NoContent, ValidationProblem, NotFound<int>>> UpdateAsync(int id, Character character)
     {
         var entity = await _context.Characters.FindAsync(character.Id);
 
         if (entity == null)
         {
-            return NotFound;
+            return TypedResults.NotFound(id);
         }
 
         entity.AlterEgo = character.AlterEgo;
@@ -69,27 +97,27 @@ public sealed class CharacterRepository : ICharacterRepository
 
         await _context.SaveChangesAsync();
 
-        return Updated;
+        return TypedResults.NoContent();
     }
 
-    public async Task<Status> DeleteAsync(int characterId)
+    public async Task<Results<NoContent, NotFound<int>>> DeleteAsync(int id)
     {
-        var entity = await _context.Characters.FindAsync(characterId);
+        var entity = await _context.Characters.FindAsync(id);
 
         if (entity == null)
         {
-            return NotFound;
+            return TypedResults.NotFound(id);
         }
 
         _context.Characters.Remove(entity);
         await _context.SaveChangesAsync();
 
-        return Deleted;
+        return TypedResults.NoContent();
     }
 
-    private async Task<City?> CreateOrUpdateCity(string? cityName) => string.IsNullOrWhiteSpace(cityName) ? null : await _context.Cities.FirstOrDefaultAsync(c => c.Name == cityName) ?? new City(cityName);
+    private async Task<CityEntity?> CreateOrUpdateCity(string? cityName) => string.IsNullOrWhiteSpace(cityName) ? null : await _context.Cities.FirstOrDefaultAsync(c => c.Name == cityName) ?? new CityEntity { Name = cityName };
 
-    private async IAsyncEnumerable<Power> CreateOrUpdatePowers(IEnumerable<string> powerNames)
+    private async IAsyncEnumerable<PowerEntity> CreateOrUpdatePowers(IEnumerable<string> powerNames)
     {
         var existing = await _context.Powers.Where(p => powerNames.Contains(p.Name)).ToDictionaryAsync(p => p.Name);
 
@@ -97,7 +125,7 @@ public sealed class CharacterRepository : ICharacterRepository
         {
             existing.TryGetValue(powerName, out var power);
 
-            yield return power ?? new Power(powerName);
+            yield return power ?? new PowerEntity { Name = powerName };
         }
     }
 }

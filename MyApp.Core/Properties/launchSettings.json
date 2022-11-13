@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "MyApp.Core": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53482;http://localhost:53483"
+    }
+  }
+}

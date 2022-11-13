@@ -27,7 +27,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Restore
         run: dotnet restore
@@ -36,4 +36,4 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Test
-        run: dotnet test --filter FullyQualifiedName!~MyApp.Integration.Tests --configuration Release
+        run: dotnet test --filter FullyQualifiedName!~MyApp.MinimalApi.Integration.Tests --configuration Release

@@ -17,12 +17,12 @@ namespace MyApp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CharacterPower", b =>
+            modelBuilder.Entity("CharacterEntityPowerEntity", b =>
                 {
                     b.Property<int>("CharactersId")
                         .HasColumnType("int");
@@ -34,16 +34,16 @@ namespace MyApp.Infrastructure.Migrations
 
                     b.HasIndex("PowersId");
 
-                    b.ToTable("CharacterPower");
+                    b.ToTable("CharacterEntityPowerEntity");
                 });
 
-            modelBuilder.Entity("MyApp.Infrastructure.Character", b =>
+            modelBuilder.Entity("MyApp.Infrastructure.CharacterEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AlterEgo")
                         .HasMaxLength(50)
@@ -56,7 +56,6 @@ namespace MyApp.Infrastructure.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("GivenName")
@@ -79,16 +78,16 @@ namespace MyApp.Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Characters");
+                    b.ToTable("Characters", (string)null);
                 });
 
-            modelBuilder.Entity("MyApp.Infrastructure.City", b =>
+            modelBuilder.Entity("MyApp.Infrastructure.CityEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -100,16 +99,16 @@ namespace MyApp.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
-            modelBuilder.Entity("MyApp.Infrastructure.Power", b =>
+            modelBuilder.Entity("MyApp.Infrastructure.PowerEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -121,34 +120,34 @@ namespace MyApp.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Powers");
+                    b.ToTable("Powers", (string)null);
                 });
 
-            modelBuilder.Entity("CharacterPower", b =>
+            modelBuilder.Entity("CharacterEntityPowerEntity", b =>
                 {
-                    b.HasOne("MyApp.Infrastructure.Character", null)
+                    b.HasOne("MyApp.Infrastructure.CharacterEntity", null)
                         .WithMany()
                         .HasForeignKey("CharactersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyApp.Infrastructure.Power", null)
+                    b.HasOne("MyApp.Infrastructure.PowerEntity", null)
                         .WithMany()
                         .HasForeignKey("PowersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyApp.Infrastructure.Character", b =>
+            modelBuilder.Entity("MyApp.Infrastructure.CharacterEntity", b =>
                 {
-                    b.HasOne("MyApp.Infrastructure.City", "City")
+                    b.HasOne("MyApp.Infrastructure.CityEntity", "City")
                         .WithMany("Characters")
                         .HasForeignKey("CityId");
 
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("MyApp.Infrastructure.City", b =>
+            modelBuilder.Entity("MyApp.Infrastructure.CityEntity", b =>
                 {
                     b.Navigation("Characters");
                 });

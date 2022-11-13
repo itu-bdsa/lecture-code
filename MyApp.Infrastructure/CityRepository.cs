@@ -3,98 +3,110 @@ namespace MyApp.Infrastructure;
 public sealed class CityRepository : ICityRepository
 {
     private readonly ComicsContext _context;
+    private readonly CityValidator _validator;
 
-    public CityRepository(ComicsContext context)
+    public CityRepository(ComicsContext context, CityValidator validator)
     {
         _context = context;
+        _validator = validator;
     }
 
-    public async Task<(Status, CityDto)> CreateAsync(CityCreateDto city)
+    public async Task<Results<Created<City>, ValidationProblem, Conflict<City>>> CreateAsync(City city)
     {
+        var validation = _validator.Validate(city);
+
+        if (!validation.IsValid)
+        {
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+        }
+
         var entity = await _context.Cities.FirstOrDefaultAsync(c => c.Name == city.Name);
-        Status status;
 
         if (entity is null)
         {
-            entity = new City(city.Name);
-
+            entity = new CityEntity { Name = city.Name };
             _context.Cities.Add(entity);
             await _context.SaveChangesAsync();
 
-            status = Created;
+            return TypedResults.Created($"{entity.Id}", city with { Id = entity.Id });
         }
         else
         {
-            status = Conflict;
+            var existing = new City { Id = entity.Id, Name = entity.Name };
+
+            return TypedResults.Conflict(existing);
         }
-
-        var created = new CityDto(entity.Id, entity.Name);
-
-        return (status, created);
     }
 
-    public async Task<CityDto?> FindAsync(int cityId)
+    public async Task<Results<Ok<City>, NotFound<int>>> FindAsync(int id)
     {
         var cities = from c in _context.Cities
-                     where c.Id == cityId
-                     select new CityDto(c.Id, c.Name);
+                     where c.Id == id
+                     select new City { Id = c.Id, Name = c.Name };
 
-        return await cities.FirstOrDefaultAsync();
+        var city = await cities.FirstOrDefaultAsync();
+
+        return city is null ? TypedResults.NotFound(id) : TypedResults.Ok(city);
     }
 
-    public async Task<IReadOnlyCollection<CityDto>> ReadAsync()
+    public async Task<IReadOnlyCollection<City>> ReadAsync()
     {
         var cities = from c in _context.Cities
                      orderby c.Name
-                     select new CityDto(c.Id, c.Name);
+                     select new City { Id = c.Id, Name = c.Name };
 
         return await cities.ToArrayAsync();
     }
 
-    public async Task<Status> UpdateAsync(CityDto city)
+    public async Task<Results<NoContent, ValidationProblem, NotFound<int>, Conflict<City>>> UpdateAsync(int id, City city)
     {
-        var entity = await _context.Cities.FindAsync(city.Id);
-        Status status;
+        var validation = _validator.Validate(city);
+
+        if (!validation.IsValid)
+        {
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+        }
+
+        var entity = await _context.Cities.FindAsync(id);
 
         if (entity is null)
         {
-            status = NotFound;
+            return TypedResults.NotFound(id);
         }
-        else if (await _context.Cities.FirstOrDefaultAsync(c => c.Id != city.Id && c.Name == city.Name) != null)
+
+        var existing = await _context.Cities.FirstOrDefaultAsync(c => c.Id != city.Id && c.Name == city.Name);
+
+        if (existing != null)
         {
-            status = Conflict;
+            return TypedResults.Conflict(new City { Id = existing.Id, Name = existing.Name });
         }
         else
         {
             entity.Name = city.Name;
             await _context.SaveChangesAsync();
-            status = Updated;
-        }
 
-        return status;
+            return TypedResults.NoContent();
+        }
     }
 
-    public async Task<Status> DeleteAsync(int cityId)
+    public async Task<Results<NoContent, NotFound<int>, Conflict<City>>> DeleteAsync(int id)
     {
-        var city = await _context.Cities.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == cityId);
-        Status status;
+        var city = await _context.Cities.Include(c => c.Characters).FirstOrDefaultAsync(c => c.Id == id);
 
         if (city is null)
         {
-            status = NotFound;
+            return TypedResults.NotFound(id);
         }
         else if (city.Characters.Any())
         {
-            status = Conflict;
+            return TypedResults.Conflict(new City { Id = city.Id, Name = city.Name });
         }
         else
         {
             _context.Cities.Remove(city);
             await _context.SaveChangesAsync();
 
-            status = Deleted;
+            return TypedResults.NoContent();
         }
-
-        return status;
     }
 }
