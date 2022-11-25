@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Infrastructure.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.MinimalApi", "MyApp.MinimalApi\MyApp.MinimalApi.csproj", "{9D4F877A-88D7-4E61-BE77-34051062FEAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApp.MinimalApi.Integration.Tests", "MyApp.MinimalApi.Integration.Tests\MyApp.MinimalApi.Integration.Tests.csproj", "{38AB56D4-8830-4863-B513-714892D6D54D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.MinimalApi.Integration.Tests", "MyApp.MinimalApi.Integration.Tests\MyApp.MinimalApi.Integration.Tests.csproj", "{38AB56D4-8830-4863-B513-714892D6D54D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
