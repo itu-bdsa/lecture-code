@@ -9,7 +9,6 @@
 
   <PropertyGroup>
     <ContainerImageName>myapp-api</ContainerImageName>
-    <ContainerImageTag>1.0</ContainerImageTag>
     <ContainerImageTags>1.0;latest</ContainerImageTags>
     <ContainerRegistry>bdsa2022registry.azurecr.io</ContainerRegistry>
     <PublishProfile>DefaultContainer</PublishProfile>

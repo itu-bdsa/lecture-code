@@ -83,11 +83,17 @@ jobs:
           template: ./azuredeploy.bicep
           parameters: ./azuredeploy.parameters.json sqlAdministratorsGroupObjectId=${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }}
 
+      - name: Migrate database
+        run: |
+          export ConnectionStrings__Comics=${{ steps.deploy.outputs.sqlConnectionString }}
+          dotnet tool install --global dotnet-ef --version 7.0.0
+          dotnet ef database update --project ./MyApp.Infrastructure --startup-project ./MyApp.Api
+
       - name: Add Container App Managed Identity To SQL Administrators Group
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            IS_MEMBER=(az ad group member check --group MyGroupDisplayName --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }} --query value --output tsv)
+            IS_MEMBER=$(az ad group member check --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }} --query value --output tsv)
             if [$IS_MEMBER=='false']
             then
               az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }}
