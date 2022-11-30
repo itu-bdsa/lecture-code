@@ -1,4 +1,4 @@
-﻿namespace MyApp.MinimalApi.Integration.Tests;
+﻿namespace MyApp.Api.Integration.Tests;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class TestPriorityAttribute : Attribute

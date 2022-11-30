@@ -14,49 +14,54 @@ public sealed class ComicsContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CityEntity>()
-                    .HasIndex(c => c.Name).IsUnique();
+                    .HasIndex(city => city.Name).IsUnique();
 
         modelBuilder.Entity<CityEntity>()
                     .ToTable("Cities");
 
-        modelBuilder.Entity<CityEntity>().Property(c => c.Name)
+        modelBuilder.Entity<CityEntity>().Property(city => city.Name)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<PowerEntity>()
                     .ToTable("Powers");
 
-        modelBuilder.Entity<PowerEntity>()
-                    .HasIndex(c => c.Name).IsUnique();
+        modelBuilder.Entity<CharacterEntity>()
+                    .HasMany(left => left.Powers)
+                    .WithMany(right => right.Characters)
+                    .UsingEntity(join => join.ToTable("CharacterPowers"));
 
         modelBuilder.Entity<PowerEntity>()
-                    .Property(c => c.Name)
+                    .HasIndex(power => power.Name).IsUnique();
+
+        modelBuilder.Entity<PowerEntity>()
+                    .Property(power => power.Name)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<CharacterEntity>()
                     .ToTable("Characters");
 
         modelBuilder.Entity<CharacterEntity>()
-                    .Property(c => c.AlterEgo)
+                    .Property(character => character.AlterEgo)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<CharacterEntity>()
-                    .Property(c => c.GivenName)
+                    .Property(character => character.GivenName)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<CharacterEntity>()
-                    .Property(c => c.Surname)
+                    .Property(character => character.Surname)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<CharacterEntity>()
-                    .Property(c => c.Occupation)
+                    .Property(character => character.Occupation)
                     .HasMaxLength(50);
 
         modelBuilder.Entity<CharacterEntity>()
-                    .Property(e => e.Gender)
+                    .Property(character => character.Gender)
                     .HasConversion(new EnumToStringConverter<Gender>(new ConverterMappingHints(size: 50)));
 
         modelBuilder.Entity<CharacterEntity>()
-                    .Property(c => c.ImageUrl)
+                    .Property(character => character.ImageUrl)
                     .HasMaxLength(250);
     }
 }

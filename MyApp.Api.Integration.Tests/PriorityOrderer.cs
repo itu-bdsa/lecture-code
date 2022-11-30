@@ -1,7 +1,7 @@
 ﻿using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace MyApp.MinimalApi.Integration.Tests
+namespace MyApp.Api.Integration.Tests
 {
     public class PriorityOrderer : ITestCaseOrderer
     {

@@ -12,7 +12,7 @@ using MyApp.Infrastructure;
 namespace MyApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ComicsContext))]
-    [Migration("20221113161604_InitialMigration")]
+    [Migration("20221130101557_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -37,7 +37,7 @@ namespace MyApp.Infrastructure.Migrations
 
                     b.HasIndex("PowersId");
 
-                    b.ToTable("CharacterEntityPowerEntity");
+                    b.ToTable("CharacterPowers", (string)null);
                 });
 
             modelBuilder.Entity("MyApp.Infrastructure.CharacterEntity", b =>

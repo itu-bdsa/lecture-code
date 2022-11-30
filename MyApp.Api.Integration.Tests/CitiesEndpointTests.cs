@@ -1,6 +1,6 @@
-namespace MyApp.MinimalApi.Integration.Tests
+namespace MyApp.Api.Integration.Tests
 {
-    [TestCaseOrderer("MyApp.MinimalApi.Integration.Tests.PriorityOrderer", "MyApp.MinimalApi.Integration.Tests")]
+    [TestCaseOrderer("MyApp.Api.Integration.Tests.PriorityOrderer", "MyApp.Api.Integration.Tests")]
     public class CitiesEndpointTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;

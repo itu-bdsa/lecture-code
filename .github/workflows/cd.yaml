@@ -1,0 +1,95 @@
+---
+name: Deploy
+
+# Pre:
+# az ad group create --display-name 'BDSA2022-Admins' --mail-nickname 'bdsa2022-admins'
+# az ad group owner add --group 'BDSA2022-Admins' --owner-object-id $SERVICE_PRINCIPAL_OBJECT_ID
+# Post:
+# az ad group member add --group 'BDSA2022-Admins' --owner-object-id $CONTAINER_APP_MANAGED_IDENTITY_ID
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "*.md"
+
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  LOCATION: westeurope
+  RESOURCE_GROUP: BDSA2022
+  CONTAINER_REGISTRY: bdsa2022registry
+  SQL_ADMINISTRATORS_GROUP_OBJECT_ID: 0d7e6e8d-6323-4ced-827d-6685ef644e34
+
+jobs:
+  deploy:
+    name: Deploy
+    environment:
+      name: Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create Resource Group
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az group create --name ${{ env.RESOURCE_GROUP }} --location ${{ env.LOCATION }}
+
+      - name: Deploy Resources
+        id: deploy
+        uses: Azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ./azuredeploy.bicep
+          parameters: ./azuredeploy.parameters.json sqlAdministratorsGroupObjectId=${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }}
+
+      - name: Migrate database
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet tool restore
+          dotnet ef database update --project ./MyApp.Infrastructure --startup-project ./MyApp.Api
+        env:
+          ConnectionStrings__Comics: ${{ steps.deploy.outputs.sqlConnectionString }}
+
+      - name: Get Container Registry Password
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            CONTAINER_REGISTRY_PASSWORD=$(az acr credential show --name ${{ env.CONTAINER_REGISTRY }} --query passwords[0].value --output tsv)
+            echo "::add-mask::$CONTAINER_REGISTRY_PASSWORD"
+            echo "CONTAINER_REGISTRY_PASSWORD=$CONTAINER_REGISTRY_PASSWORD" >> $GITHUB_ENV
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.CONTAINER_REGISTRY }}.azurecr.io
+          username: ${{ env.CONTAINER_REGISTRY }}
+          password: ${{ env.CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: Publish API To Azure Container Registry
+        run: dotnet publish ./MyApp.Api --os linux --arch x64 --configuration Release

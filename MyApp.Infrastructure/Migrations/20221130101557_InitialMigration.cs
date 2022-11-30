@@ -62,7 +62,7 @@ namespace MyApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterEntityPowerEntity",
+                name: "CharacterPowers",
                 columns: table => new
                 {
                     CharactersId = table.Column<int>(type: "int", nullable: false),
@@ -70,15 +70,15 @@ namespace MyApp.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterEntityPowerEntity", x => new { x.CharactersId, x.PowersId });
+                    table.PrimaryKey("PK_CharacterPowers", x => new { x.CharactersId, x.PowersId });
                     table.ForeignKey(
-                        name: "FK_CharacterEntityPowerEntity_Characters_CharactersId",
+                        name: "FK_CharacterPowers_Characters_CharactersId",
                         column: x => x.CharactersId,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CharacterEntityPowerEntity_Powers_PowersId",
+                        name: "FK_CharacterPowers_Powers_PowersId",
                         column: x => x.PowersId,
                         principalTable: "Powers",
                         principalColumn: "Id",
@@ -86,8 +86,8 @@ namespace MyApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CharacterEntityPowerEntity_PowersId",
-                table: "CharacterEntityPowerEntity",
+                name: "IX_CharacterPowers_PowersId",
+                table: "CharacterPowers",
                 column: "PowersId");
 
             migrationBuilder.CreateIndex(
@@ -112,7 +112,7 @@ namespace MyApp.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CharacterEntityPowerEntity");
+                name: "CharacterPowers");
 
             migrationBuilder.DropTable(
                 name: "Characters");

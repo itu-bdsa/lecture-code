@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\MyApp.MinimalApi\MyApp.MinimalApi.csproj" />
+	  <ProjectReference Include="..\MyApp.Api\MyApp.Api.csproj" />
 	</ItemGroup>
 
 </Project>
