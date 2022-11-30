@@ -64,6 +64,7 @@ jobs:
             SERVICE_PRINCIPAL_OBJECT_ID=$(az ad sp show --id ${{ secrets.AZURE_CLIENT_ID }} --query id --output tsv)
             IS_MEMBER=(az ad group member check --group MyGroupDisplayName --member-id $SERVICE_PRINCIPAL_OBJECT_ID --query value --output tsv)
             if [$IS_MEMBER=='false']
+            then
               az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id $SERVICE_PRINCIPAL_OBJECT_ID
             fi
 
