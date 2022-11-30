@@ -75,12 +75,23 @@ jobs:
             az group create --name ${{ env.RESOURCE_GROUP }} --location ${{ env.LOCATION }}
 
       - name: Deploy Resources
+        id: deploy
         uses: Azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
           template: ./azuredeploy.bicep
           parameters: ./azuredeploy.parameters.json sqlAdministratorsGroupObjectId=${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }}
+
+      - name: Add Container App Managed Identity To SQL Administrators Group
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            IS_MEMBER=(az ad group member check --group MyGroupDisplayName --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }} --query value --output tsv)
+            if [$IS_MEMBER=='false']
+            then
+              az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }}
+            fi
 
       - name: Get Container Registry Password
         uses: azure/CLI@v1
