@@ -19,7 +19,7 @@ az deployment group create \
 --parameters @azuredeploy.parameters.json \
 --parameters sqlServerAdministratorsGroupObjectId=$group
 
-az arc login --name $CONTAINER_REGISTRY_NAME
+az acr login --name $CONTAINER_REGISTRY_NAME
 
 az acr build --image $CONTAINER_REGISTRY_NAME/api:{{.Run.ID}} --registry $CONTAINER_REGISTRY_NAME .
 ```

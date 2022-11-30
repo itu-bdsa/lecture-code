@@ -32,7 +32,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-09-01' =
     name: 'Basic'
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: true
     networkRuleBypassOptions: 'AzureServices'
   }
 }

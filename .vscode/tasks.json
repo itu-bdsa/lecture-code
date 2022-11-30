@@ -46,12 +46,12 @@
             "dockerBuild": {
                 "tag": "lecturecode:dev",
                 "target": "base",
-                "dockerfile": "${workspaceFolder}/MyApp.MinimalApi/Dockerfile",
+                "dockerfile": "${workspaceFolder}/MyApp.Api/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+                "appProject": "${workspaceFolder}/MyApp.Api/MyApp.Api.csproj"
             }
         },
         {
@@ -62,12 +62,12 @@
             ],
             "dockerBuild": {
                 "tag": "lecturecode:latest",
-                "dockerfile": "${workspaceFolder}/MyApp.MinimalApi/Dockerfile",
+                "dockerfile": "${workspaceFolder}/MyApp.Api/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+                "appProject": "${workspaceFolder}/MyApp.Api/MyApp.Api.csproj"
             }
         },
         {
@@ -78,7 +78,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj",
+                "appProject": "${workspaceFolder}/MyApp.Api/MyApp.Api.csproj",
                 "enableDebugging": true
             }
         },
@@ -90,7 +90,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+                "appProject": "${workspaceFolder}/MyApp.Api/MyApp.Api.csproj"
             }
         }
     ]

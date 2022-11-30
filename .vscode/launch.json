@@ -23,7 +23,7 @@
             "request": "launch",
             "preLaunchTask": "docker-run: debug",
             "netCore": {
-                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+                "appProject": "${workspaceFolder}/MyApp.Api/MyApp.Api.csproj"
             }
         }
     ]

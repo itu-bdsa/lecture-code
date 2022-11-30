@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MyApp.Infrastructure;
 
-namespace MyApp.MinimalApi.Integration.Tests
+namespace MyApp.Api.Integration.Tests
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {

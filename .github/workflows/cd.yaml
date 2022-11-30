@@ -1,0 +1,75 @@
+---
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - security
+    paths-ignore:
+      - "*.md"
+
+  workflow_dispatch:
+
+env:
+  LOCATION: westeurope
+  RESOURCE_GROUP: BDSA2022
+  CONTAINER_REGISTRY: bdsa2022registry
+  SQL_GROUP_DISPLAY_NAME: BDSA2022-Admins
+  SQL_GROUP_MAIL_NICKNAME: bdsa2022-admins
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create SQL Administrators Group
+        id: create-sql-administrators-group
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            SQL_GROUP_OBJECT_ID=$(az ad group create --display-name "${{ env.SQL_GROUP_DISPLAY_NAME }}" --mail-nickname ${{ env.SQL_GROUP_MAIL_NICKNAME }} --query id --output tsv)
+            echo "::set-output name=SQL_GROUP_OBJECT_ID::$SQL_GROUP_OBJECT_ID"
+
+      - name: Create Resource Group
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az group create --name ${{ env.RESOURCE_GROUP }} --location ${{ env.LOCATION }}
+
+      - name: Deploy Resources
+        uses: Azure/arm-deploy@v1
+        with:
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          template: ./azure-deploy.bicep sqlServerAdministratorsGroupObjectId=${{ steps.create-sql-administrators-group.outputs.SQL_GROUP_OBJECT_ID }}
+          parameters: ./azure-deploy.parameters.json
+
+      - name: Azure Container Registry Login
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            PASSWORD=$(az acr credential show --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_REGISTRY }} --query passwords[0].value --output tsv)
+            az acr login --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_REGISTRY }} --username ${{ env.CONTAINER_REGISTRY }} --password $PASSWORD
+            dotnet publish ./MyApp.Api --os linux --arch x64 --configuration Release

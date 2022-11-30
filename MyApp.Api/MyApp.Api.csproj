@@ -4,12 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-MyApp.MinimalApi-21da7435-574c-4f98-be95-8226136772f3</UserSecretsId>
+    <UserSecretsId>aspnet-MyApp.Api-21da7435-574c-4f98-be95-8226136772f3</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup>
     <ContainerImageName>myapp-api</ContainerImageName>
     <ContainerImageTag>latest</ContainerImageTag>
+    <ContainerRegistry>bdsa2022registry.azurecr.io</ContainerRegistry>
     <PublishProfile>DefaultContainer</PublishProfile>
   </PropertyGroup>
 
