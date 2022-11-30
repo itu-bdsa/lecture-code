@@ -82,10 +82,19 @@ jobs:
           template: ./azuredeploy.bicep
           parameters: ./azuredeploy.parameters.json sqlAdministratorsGroupObjectId=${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }}
 
-      - name: Azure Container Registry Login
+      - name: Get Credential For Azure Container Registry
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            PASSWORD=$(az acr credential show --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_REGISTRY }} --query passwords[0].value --output tsv)
-            az acr login --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_REGISTRY }} --username ${{ env.CONTAINER_REGISTRY }} --password $PASSWORD
-            dotnet publish ./MyApp.Api --os linux --arch x64 --configuration Release
+            CONTAINER_REGISTRY_PASSWORD=$(az acr credential show --name ${{ env.CONTAINER_REGISTRY }} --query passwords[0].value --output tsv)
+            echo "CONTAINER_REGISTRY_PASSWORD=$CONTAINER_REGISTRY_PASSWORD" >> $GITHUB_ENV
+
+      - name: Login To Azure Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}.azurecr.io
+          username: ${{ env.CONTAINER_REGISTRY }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: Publish API To Azure Container Registry
+        run: dotnet publish ./MyApp.Api --os linux --arch x64 --configuration Release
