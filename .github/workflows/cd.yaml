@@ -1,6 +1,10 @@
 ---
 name: Deploy
 
+# Prerequisites:
+# az ad group create --display-name 'BDSA2022-Admins' --mail-nickname 'bdsa2022-admins'
+# az ad group owner add --group 'BDSA2022-Admins' --owner-object-id SERVICE_PRINCIPAL_OBJECT_ID
+
 on:
   push:
     branches:
@@ -19,8 +23,7 @@ env:
   LOCATION: westeurope
   RESOURCE_GROUP: BDSA2022
   CONTAINER_REGISTRY: bdsa2022registry
-  SQL_ADMINISTRATORS_GROUP_DISPLAY_NAME: BDSA2022-Admins
-  SQL_ADMINISTRATORS_GROUP_MAIL_NICKNAME: bdsa2022-admins
+  SQL_ADMINISTRATORS_GROUP_OBJECT_ID: 0d7e6e8d-6323-4ced-827d-6685ef644e34
 
 jobs:
   deploy:
@@ -49,24 +52,6 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Create SQL Administrators Group
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            SQL_ADMINISTRATORS_GROUP_OBJECT_ID=$(az ad group create --display-name "${{ env.SQL_ADMINISTRATORS_GROUP_DISPLAY_NAME }}" --mail-nickname ${{ env.SQL_ADMINISTRATORS_GROUP_MAIL_NICKNAME }} --query id --output tsv)
-            echo "SQL_ADMINISTRATORS_GROUP_OBJECT_ID=$SQL_ADMINISTRATORS_GROUP_OBJECT_ID" >> $GITHUB_ENV
-
-      - name: Add Service Principal To SQL Administrators Group
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            SERVICE_PRINCIPAL_OBJECT_ID=$(az ad sp show --id ${{ secrets.AZURE_CLIENT_ID }} --query id --output tsv)
-            IS_MEMBER=(az ad group member check --group MyGroupDisplayName --member-id $SERVICE_PRINCIPAL_OBJECT_ID --query value --output tsv)
-            if [$IS_MEMBER=='false']
-            then
-              az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id $SERVICE_PRINCIPAL_OBJECT_ID
-            fi
 
       - name: Create Resource Group
         uses: azure/CLI@v1
