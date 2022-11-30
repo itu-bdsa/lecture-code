@@ -85,9 +85,11 @@ jobs:
 
       - name: Migrate database
         run: |
-          export ConnectionStrings__Comics=${{ steps.deploy.outputs.sqlConnectionString }}
-          dotnet tool install --global dotnet-ef --version 7.0.0
+          dotnet tool install --global dotnet-ef
+          dotnet tool restore
           dotnet ef database update --project ./MyApp.Infrastructure --startup-project ./MyApp.Api
+        env:
+          ConnectionStrings__Comics: ${{ steps.deploy.outputs.sqlConnectionString }}
 
       - name: Add Container App Managed Identity To SQL Administrators Group
         uses: azure/CLI@v1
