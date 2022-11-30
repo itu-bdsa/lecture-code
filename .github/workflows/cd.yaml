@@ -56,7 +56,7 @@ jobs:
         with:
           inlineScript: |
             SQL_GROUP_OBJECT_ID=$(az ad group create --display-name "${{ env.SQL_GROUP_DISPLAY_NAME }}" --mail-nickname ${{ env.SQL_GROUP_MAIL_NICKNAME }} --query id --output tsv)
-            echo "::set-output name=SQL_GROUP_OBJECT_ID::$SQL_GROUP_OBJECT_ID"
+            echo "SQL_GROUP_OBJECT_ID=$SQL_GROUP_OBJECT_ID" >> $GITHUB_ENV
 
       - name: Create Resource Group
         uses: azure/CLI@v1
@@ -69,8 +69,8 @@ jobs:
         with:
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          template: ./azure-deploy.bicep sqlServerAdministratorsGroupObjectId=${{ steps.create-sql-administrators-group.outputs.SQL_GROUP_OBJECT_ID }}
-          parameters: ./azure-deploy.parameters.json
+          template: ./azure-deploy.bicep
+          parameters: ./azure-deploy.parameters.json sqlServerAdministratorsGroupObjectId=${{ env.SQL_GROUP_OBJECT_ID }}
 
       - name: Azure Container Registry Login
         uses: azure/CLI@v1
