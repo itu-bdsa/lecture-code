@@ -76,15 +76,15 @@ jobs:
         env:
           ConnectionStrings__Comics: ${{ steps.deploy.outputs.sqlConnectionString }}
 
-      - name: Add Container App Managed Identity To SQL Administrators Group
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            IS_MEMBER=$(az ad group member check --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }} --query value --output tsv)
-            if [$IS_MEMBER=='false']
-            then
-              az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }}
-            fi
+      # - name: Add Container App Managed Identity To SQL Administrators Group
+      #   uses: azure/CLI@v1
+      #   with:
+      #     inlineScript: |
+      #       IS_MEMBER=$(az ad group member check --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }} --query value --output tsv)
+      #       if [$IS_MEMBER=='false']
+      #       then
+      #         az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }}
+      #       fi
 
       - name: Get Container Registry Password
         uses: azure/CLI@v1
