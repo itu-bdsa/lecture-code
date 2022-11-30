@@ -11,6 +11,10 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   LOCATION: westeurope
   RESOURCE_GROUP: BDSA2022
