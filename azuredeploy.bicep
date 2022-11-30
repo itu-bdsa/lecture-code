@@ -64,7 +64,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
       ingress: {
         external: true
         targetPort: 80
-        transport: 'http2'
+        transport: 'auto'
       }
       registries: [
         {
@@ -96,6 +96,17 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
         maxReplicas: 1
       }
     }
+  }
+}
+
+var acrPullRole = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+
+resource containerAppsRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerApp.id, containerRegistry.id, acrPullRole)
+  properties: {
+    principalId: containerApp.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: acrPullRole
   }
 }
 
