@@ -17,7 +17,7 @@ az deployment group create \
 --resource-group $RESOURCE_GROUP_NAME \
 --template-file azuredeploy.bicep \
 --parameters @azuredeploy.parameters.json \
---parameters sqlServerAdministratorsGroupObjectId=$group
+--parameters sqlAdministratorsGroupObjectId=$group
 
 az acr login --name $CONTAINER_REGISTRY_NAME
 

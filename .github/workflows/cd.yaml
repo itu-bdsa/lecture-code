@@ -80,7 +80,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
           template: ./azuredeploy.bicep
-          parameters: ./azuredeploy.parameters.json sqlServerAdministratorsGroupObjectId=${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }}
+          parameters: ./azuredeploy.parameters.json sqlAdministratorsGroupObjectId=${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }}
 
       - name: Azure Container Registry Login
         uses: azure/CLI@v1
