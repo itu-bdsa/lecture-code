@@ -23,10 +23,10 @@
     "sqlDatabaseName": {
       "value": "Comics"
     },
-    "sqlServerAdministratorsGroupName": {
+    "sqlAdministratorsGroupName": {
       "value": "BDSA2022-Admins"
     },
-    "sqlServerAdministratorsGroupObjectId": {
+    "sqlAdministratorsGroupObjectId": {
       "value": "--from-pipeline--"
     },
     "sqlDatabaseSkuName": {

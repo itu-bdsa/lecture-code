@@ -6,8 +6,8 @@ param containerAppsEnvironmentName string
 // param containerAppName string
 param sqlServerName string
 param sqlDatabaseName string
-param sqlServerAdministratorsGroupName string
-param sqlServerAdministratorsGroupObjectId string
+param sqlAdministratorsGroupName string
+param sqlAdministratorsGroupObjectId string
 param sqlDatabaseSkuName string
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
@@ -87,12 +87,12 @@ resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
     minimalTlsVersion: '1.2'
     publicNetworkAccess: 'Enabled'
     administrators: {
-      administratorType: 'ActiveDirectory'
       azureADOnlyAuthentication: true
-      login: sqlServerAdministratorsGroupName
+      administratorType: 'ActiveDirectory'
       principalType: 'Group'
-      sid: sqlServerAdministratorsGroupObjectId
-      tenantId: tenant().tenantId
+      login: sqlAdministratorsGroupName
+      sid: sqlAdministratorsGroupObjectId
+      tenantId: subscription().tenantId
     }
   }
 
