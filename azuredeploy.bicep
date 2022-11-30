@@ -84,9 +84,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
             }
           ]
           resources: {
-            cpu: 0.25
+            cpu: json('0.25')
             memory: '0.5Gi'
-            ephemeralStorage: ''
           }
         }
       ]
@@ -135,4 +134,5 @@ resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
   }
 }
 
-// output containerAppManagedIdentityId string = containerApp.identity.principalId
+output sqlConnectionString string = 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Database=${sqlDatabaseName};Authentication=Active Directory Default;'
+output containerAppManagedIdentityId string = containerApp.identity.principalId
