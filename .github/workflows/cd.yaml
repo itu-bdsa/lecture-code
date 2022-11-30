@@ -19,8 +19,10 @@ env:
   SQL_GROUP_MAIL_NICKNAME: bdsa2022-admins
 
 jobs:
-  build:
+  deploy:
     name: Deploy
+    environment:
+      name: Production
     runs-on: ubuntu-latest
 
     steps:
