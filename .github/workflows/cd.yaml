@@ -1,15 +1,16 @@
 ---
 name: Deploy
 
-# Prerequisites:
+# Pre:
 # az ad group create --display-name 'BDSA2022-Admins' --mail-nickname 'bdsa2022-admins'
-# az ad group owner add --group 'BDSA2022-Admins' --owner-object-id SERVICE_PRINCIPAL_OBJECT_ID
+# az ad group owner add --group 'BDSA2022-Admins' --owner-object-id $SERVICE_PRINCIPAL_OBJECT_ID
+# Post:
+# az ad group member add --group 'BDSA2022-Admins' --owner-object-id $CONTAINER_APP_MANAGED_IDENTITY_ID
 
 on:
   push:
     branches:
       - main
-      - security
     paths-ignore:
       - "*.md"
 
@@ -75,16 +76,6 @@ jobs:
           dotnet ef database update --project ./MyApp.Infrastructure --startup-project ./MyApp.Api
         env:
           ConnectionStrings__Comics: ${{ steps.deploy.outputs.sqlConnectionString }}
-
-      # - name: Add Container App Managed Identity To SQL Administrators Group
-      #   uses: azure/CLI@v1
-      #   with:
-      #     inlineScript: |
-      #       IS_MEMBER=$(az ad group member check --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }} --query value --output tsv)
-      #       if [$IS_MEMBER=='false']
-      #       then
-      #         az ad group member add --group ${{ env.SQL_ADMINISTRATORS_GROUP_OBJECT_ID }} --member-id ${{ steps.deploy.outputs.containerAppManagedIdentityId }}
-      #       fi
 
       - name: Get Container Registry Password
         uses: azure/CLI@v1
