@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
-      - name: Login
+      - name: Azure Login
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -57,6 +57,14 @@ jobs:
           inlineScript: |
             SQL_GROUP_OBJECT_ID=$(az ad group create --display-name "${{ env.SQL_GROUP_DISPLAY_NAME }}" --mail-nickname ${{ env.SQL_GROUP_MAIL_NICKNAME }} --query id --output tsv)
             echo "SQL_GROUP_OBJECT_ID=$SQL_GROUP_OBJECT_ID" >> $GITHUB_ENV
+
+      - name: Add Service Principal To SQL Administrators Group
+        id: create-sql-administrators-group
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            SP_OBJECT_ID=$(az ad sp show --id ${{ secrets.AZURE_CLIENT_ID }} --query id --output tsv)
+            az ad group member add --group ${{ env.SQL_GROUP_OBJECT_ID }} --member-id $SP_OBJECT_ID
 
       - name: Create Resource Group
         uses: azure/CLI@v1

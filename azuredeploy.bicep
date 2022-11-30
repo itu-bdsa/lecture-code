@@ -3,7 +3,7 @@ param logAnalyticsWorkspaceName string
 param applicationInsightsName string
 param containerRegistryName string
 param containerAppsEnvironmentName string
-param containerAppName string
+// param containerAppName string
 param sqlServerName string
 param sqlDatabaseName string
 param sqlServerAdministratorsGroupName string
