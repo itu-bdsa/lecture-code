@@ -51,7 +51,6 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Create SQL Administrators Group
-        id: create-sql-administrators-group
         uses: azure/CLI@v1
         with:
           inlineScript: |
@@ -59,7 +58,6 @@ jobs:
             echo "SQL_GROUP_OBJECT_ID=$SQL_GROUP_OBJECT_ID" >> $GITHUB_ENV
 
       - name: Add Service Principal To SQL Administrators Group
-        id: create-sql-administrators-group
         uses: azure/CLI@v1
         with:
           inlineScript: |
