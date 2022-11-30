@@ -14,9 +14,9 @@
     "containerAppsEnvironmentName": {
       "value": "bdsa2022-env"
     },
-    // "containerAppName": {
-    //   "value": "api"
-    // },
+    "containerAppName": {
+      "value": "api"
+    },
     "sqlServerName": {
       "value": "bdsa2022-sql"
     },

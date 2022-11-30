@@ -3,7 +3,7 @@ param logAnalyticsWorkspaceName string
 param applicationInsightsName string
 param containerRegistryName string
 param containerAppsEnvironmentName string
-// param containerAppName string
+param containerAppName string
 param sqlServerName string
 param sqlDatabaseName string
 param sqlAdministratorsGroupName string
@@ -52,30 +52,51 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
   }
 }
 
-// resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
-//   name: containerAppName
-//   location: location
-//   identity: {
-//     type: 'SystemAssigned'
-//   }
-//   properties: {
-//     managedEnvironmentId: containerAppsEnvironment.id
-//     configuration: {
-//       ingress: {
-//         external: true
-//       }
-//     }
-//     template: {
-//       containers: [
-//         {
-//           name: 'api'
-//           image: 'api:v1'
-
-//         }
-//       ]
-//     }
-//   }
-// }
+resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
+  name: containerAppName
+  location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    managedEnvironmentId: containerAppsEnvironment.id
+    configuration: {
+      ingress: {
+        external: true
+      }
+      registries: [
+        {
+          identity: 'system'
+          server: containerRegistry.properties.loginServer
+        }
+      ]
+    }
+    template: {
+      revisionSuffix: ''
+      containers: [
+        {
+          image: '${containerRegistry.properties.loginServer}/api:1.0.0'
+          name: 'api'
+          env: [
+            {
+              name: 'ConnectionStrings__Comics'
+              value: 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Database=${sqlDatabaseName};Authentication=Active Directory Default;'
+            }
+          ]
+          resources: {
+            cpu: 0.25
+            memory: '0.5Gi'
+            ephemeralStorage: ''
+          }
+        }
+      ]
+      scale: {
+        minReplicas: 1
+        maxReplicas: 1
+      }
+    }
+  }
+}
 
 resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
   name: sqlServerName
