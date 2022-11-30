@@ -67,10 +67,10 @@ jobs:
       - name: Deploy Resources
         uses: Azure/arm-deploy@v1
         with:
-          resourceGroupName: ${{ env.RESOURCE_GROUP }}
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          template: ./azure-deploy.bicep
-          parameters: ./azure-deploy.parameters.json sqlServerAdministratorsGroupObjectId=${{ env.SQL_GROUP_OBJECT_ID }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ./azuredeploy.bicep
+          parameters: ./azuredeploy.parameters.json sqlServerAdministratorsGroupObjectId=${{ env.SQL_GROUP_OBJECT_ID }}
 
       - name: Azure Container Registry Login
         uses: azure/CLI@v1
