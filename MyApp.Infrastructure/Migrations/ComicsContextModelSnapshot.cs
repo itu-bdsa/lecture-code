@@ -34,7 +34,7 @@ namespace MyApp.Infrastructure.Migrations
 
                     b.HasIndex("PowersId");
 
-                    b.ToTable("CharacterEntityPowerEntity");
+                    b.ToTable("CharacterPowers", (string)null);
                 });
 
             modelBuilder.Entity("MyApp.Infrastructure.CharacterEntity", b =>

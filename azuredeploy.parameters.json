@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logAnalyticsWorkspaceName": {
+      "value": "bdsa2022-logs"
+    },
+    "applicationInsightsName": {
+      "value": "bdsa2022-insights"
+    },
+    "containerRegistryName": {
+      "value": "bdsa2022registry"
+    },
+    "containerAppsEnvironmentName": {
+      "value": "bdsa2022-env"
+    },
+    "containerAppName": {
+      "value": "api"
+    },
+    "sqlServerName": {
+      "value": "bdsa2022-sql"
+    },
+    "sqlDatabaseName": {
+      "value": "Comics"
+    },
+    "sqlServerAdministratorsGroupName": {
+      "value": "BDSA2022-Admins"
+    },
+    "sqlServerAdministratorsGroupObjectId": {
+      "value": "--from-pipeline--"
+    },
+    "sqlDatabaseSkuName": {
+      "value": "S0"
+    }
+  }
+}

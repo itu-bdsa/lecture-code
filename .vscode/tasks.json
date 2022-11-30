@@ -36,6 +36,62 @@
                 "${workspaceFolder}/HelloWorld/HelloWorld.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: debug",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "lecturecode:dev",
+                "target": "base",
+                "dockerfile": "${workspaceFolder}/MyApp.MinimalApi/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+            }
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: release",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "lecturecode:latest",
+                "dockerfile": "${workspaceFolder}/MyApp.MinimalApi/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: debug",
+            "dependsOn": [
+                "docker-build: debug"
+            ],
+            "dockerRun": {},
+            "netCore": {
+                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj",
+                "enableDebugging": true
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: release",
+            "dependsOn": [
+                "docker-build: release"
+            ],
+            "dockerRun": {},
+            "netCore": {
+                "appProject": "${workspaceFolder}/MyApp.MinimalApi/MyApp.MinimalApi.csproj"
+            }
         }
     ]
 }
